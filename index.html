@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>激光焊接专家数据库 | Laser Welding Expert Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --bg-card-hover: #1f2a40;
+  --bg-surface: #0f1729;
+  --border: #1e2d4a;
+  --border-hover: #2a4070;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-laser: #60a5fa;
+  --accent-orange: #f97316;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --glow-blue: rgba(59, 130, 246, 0.15);
+  --glow-cyan: rgba(6, 182, 212, 0.1);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(59,130,246,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(6,182,212,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(15,23,42,0.9) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+#root { position: relative; z-index: 1; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+/* Header */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(10,14,23,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 70px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-logo {
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; text-decoration: none;
+}
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 900; font-size: 18px; color: white;
+  box-shadow: 0 0 20px rgba(59,130,246,0.3);
+}
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 4px;
+  list-style: none; flex-wrap: wrap;
+}
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500;
+  transition: var(--transition);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: var(--accent-blue);
+  background: var(--glow-blue);
+}
+.header-right { display: flex; align-items: center; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px;
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  text-decoration: none; white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  color: white;
+  box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+}
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-card-hover);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+}
+.btn-outline:hover {
+  background: var(--accent-blue); color: white;
+}
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-lg { padding: 14px 28px; font-size: 16px; }
+.btn-ghost {
+  background: transparent; color: var(--text-secondary);
+  border: none; padding: 8px 12px;
+}
+.btn-ghost:hover { color: var(--accent-blue); background: var(--glow-blue); }
+.btn-orange {
+  background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+  color: white;
+  box-shadow: 0 4px 15px rgba(249,115,22,0.3);
+}
+.btn-orange:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249,115,22,0.4); }
+.btn-danger { background: var(--accent-red); color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-success { background: var(--accent-green); color: white; }
+.btn-success:hover { background: #059669; }
+
+/* Mobile menu */
+.hamburger {
+  display: none; background: none; border: none;
+  color: var(--text-primary); font-size: 24px; cursor: pointer;
+  padding: 8px;
+}
+.mobile-nav {
+  display: none;
+  position: fixed; top: 70px; left: 0; right: 0; bottom: 0;
+  background: rgba(10,14,23,0.98);
+  backdrop-filter: blur(20px);
+  padding: 2rem; overflow-y: auto; z-index: 999;
+}
+.mobile-nav.open { display: block; }
+.mobile-nav a {
+  display: block; padding: 14px 0;
+  color: var(--text-secondary);
+  text-decoration: none; font-size: 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.mobile-nav a:hover { color: var(--accent-blue); }
+
+/* Page container */
+.page { padding-top: 70px; min-height: 100vh; }
+.container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+.section { padding: 5rem 0; }
+.section-title {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.section-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem; margin-bottom: 2.5rem;
+}
+.section-header {
+  text-align: center; margin-bottom: 3rem;
+}
+
+/* Hero */
+.hero {
+  min-height: 85vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(6,182,212,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.04) 0%, transparent 60%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.2);
+  padding: 8px 20px; border-radius: 100px;
+  font-size: 13px; color: var(--accent-cyan);
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: fadeInUp 0.6s ease 0.1s both;
+}
+.hero-slogan {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 700px; margin: 0 auto 0.8rem;
+  line-height: 1.8;
+  animation: fadeInUp 0.6s ease 0.2s both;
+}
+.hero-sub {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 650px; margin: 0 auto 2.5rem;
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+.hero-actions {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  animation: fadeInUp 0.6s ease 0.4s both;
+}
+.hero-search {
+  max-width: 700px; margin: 3rem auto 0;
+  animation: fadeInUp 0.6s ease 0.5s both;
+}
+.search-box {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.search-box:focus-within {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 30px rgba(59,130,246,0.15);
+}
+.search-box input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  padding: 16px 24px;
+  color: var(--text-primary);
+  font-size: 16px; font-family: var(--font-body);
+}
+.search-box input::placeholder { color: var(--text-muted); }
+.search-box button {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  color: white; border: none; padding: 16px 28px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-body);
+  transition: var(--transition);
+}
+.search-box button:hover { opacity: 0.9; }
+.search-tags {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 1rem; justify-content: center;
+}
+.search-tag {
+  padding: 4px 14px;
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 100px;
+  font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; transition: var(--transition);
+}
+.search-tag:hover {
+  background: rgba(59,130,246,0.15);
+  color: var(--accent-blue);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem; margin: 4rem 0;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: var(--transition);
+}
+.stat-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem; margin-top: 0.5rem;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  opacity: 0;
+  transition: var(--transition);
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+.card:hover::before { opacity: 1; }
+.card-header {
+  display: flex; align-items: flex-start; gap: 1rem;
+  margin-bottom: 1rem;
+}
+.card-avatar {
+  width: 56px; height: 56px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; flex-shrink: 0;
+}
+.card-info { flex: 1; min-width: 0; }
+.card-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
+.card-role { font-size: 0.85rem; color: var(--text-secondary); }
+.card-org { font-size: 0.8rem; color: var(--text-muted); }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0.75rem 0; }
+.tag {
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 11px; font-weight: 500;
+  background: rgba(59,130,246,0.1); color: var(--accent-blue);
+  border: 1px solid rgba(59,130,246,0.15);
+}
+.tag-green { background: rgba(16,185,129,0.1); color: var(--accent-green); border-color: rgba(16,185,129,0.15); }
+.tag-orange { background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.15); }
+.tag-purple { background: rgba(139,92,246,0.1); color: var(--accent-purple); border-color: rgba(139,92,246,0.15); }
+.tag-red { background: rgba(239,68,68,0.1); color: var(--accent-red); border-color: rgba(239,68,68,0.15); }
+.tag-cyan { background: rgba(6,182,212,0.1); color: var(--accent-cyan); border-color: rgba(6,182,212,0.15); }
+.card-meta {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.8rem; color: var(--text-muted);
+  margin-top: 0.75rem; flex-wrap: wrap;
+}
+.card-actions {
+  display: flex; gap: 8px; margin-top: 1rem;
+  padding-top: 1rem; border-top: 1px solid var(--border);
+}
+
+/* Detail pages */
+.detail-page { padding: 2rem 0; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--accent-blue); text-decoration: none;
+  font-size: 14px; cursor: pointer;
+  margin-bottom: 2rem;
+  transition: var(--transition);
+}
+.back-link:hover { color: var(--accent-cyan); }
+.detail-header {
+  display: flex; gap: 2rem; align-items: flex-start;
+  margin-bottom: 3rem; flex-wrap: wrap;
+}
+.detail-avatar {
+  width: 120px; height: 120px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; flex-shrink: 0;
+}
+.detail-info { flex: 1; min-width: 300px; }
+.detail-name { font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem; }
+.detail-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem; margin-bottom: 1.5rem;
+}
+.detail-section h3 {
+  font-size: 1.1rem; font-weight: 700;
+  margin-bottom: 1rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.detail-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+.detail-field label {
+  display: block; font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 4px; font-weight: 500;
+}
+.detail-field span {
+  font-size: 0.95rem; color: var(--text-primary);
+}
+
+/* Sidebar layout */
+.page-with-sidebar {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+.sidebar {
+  position: sticky; top: 90px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.sidebar h3 {
+  font-size: 0.95rem; font-weight: 700;
+  margin-bottom: 1rem; color: var(--text-primary);
+}
+.filter-group { margin-bottom: 1.5rem; }
+.filter-group label {
+  display: block; font-size: 0.8rem;
+  color: var(--text-muted); margin-bottom: 6px;
+  font-weight: 500;
+}
+.filter-group select, .filter-group input {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+.filter-group select:focus, .filter-group input:focus {
+  border-color: var(--accent-blue);
+}
+.filter-group select option { background: var(--bg-secondary); }
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.data-table th {
+  background: var(--bg-surface);
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.data-table tr:hover td { background: var(--bg-card-hover); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.2s ease;
+}
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 600px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  padding: 2rem;
+  animation: slideUp 0.3s ease;
+}
+.modal-lg { max-width: 800px; }
+.modal h2 {
+  font-size: 1.3rem; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none;
+  color: var(--text-muted); font-size: 24px;
+  cursor: pointer;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form */
+.form-group { margin-bottom: 1.25rem; }
+.form-group label {
+  display: block; font-size: 0.85rem;
+  color: var(--text-secondary); margin-bottom: 6px;
+  font-weight: 500;
+}
+.form-group label .required { color: var(--accent-red); }
+.form-input {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+.form-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+textarea.form-input { min-height: 100px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* Toast */
+.toast-container {
+  position: fixed; top: 90px; right: 20px;
+  z-index: 3000; display: flex; flex-direction: column; gap: 10px;
+}
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  min-width: 300px;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease;
+  display: flex; align-items: center; gap: 10px;
+}
+.toast-success { border-left: 4px solid var(--accent-green); }
+.toast-error { border-left: 4px solid var(--accent-red); }
+.toast-info { border-left: 4px solid var(--accent-blue); }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(100px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Footer */
+.footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding: 4rem 0 2rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 2rem; margin-bottom: 3rem;
+}
+.footer-brand p {
+  color: var(--text-secondary);
+  font-size: 0.9rem; margin: 1rem 0;
+  line-height: 1.8;
+}
+.footer h4 {
+  font-size: 0.9rem; font-weight: 700;
+  margin-bottom: 1rem; color: var(--text-primary);
+}
+.footer a {
+  display: block; color: var(--text-muted);
+  text-decoration: none; font-size: 0.85rem;
+  padding: 4px 0; transition: var(--transition);
+  cursor: pointer;
+}
+.footer a:hover { color: var(--accent-blue); }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.safety-notice {
+  background: rgba(249,115,22,0.08);
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--accent-orange);
+  margin: 1.5rem 0;
+  line-height: 1.8;
+}
+
+/* Floating button */
+.fab-consult {
+  position: fixed; bottom: 30px; right: 30px;
+  z-index: 1500;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+  color: white; border: none;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(249,115,22,0.4);
+  transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+}
+.fab-consult:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 40px rgba(249,115,22,0.5);
+}
+
+/* Membership cards */
+.membership-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.membership-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem; text-align: center;
+  transition: var(--transition);
+  position: relative;
+}
+.membership-card.featured {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 40px rgba(59,130,246,0.15);
+}
+.membership-card.featured::before {
+  content: '推荐';
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  color: white; padding: 4px 16px;
+  border-radius: 100px; font-size: 12px; font-weight: 700;
+}
+.membership-card:hover { transform: translateY(-4px); }
+.membership-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+.membership-price {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 900;
+  color: var(--accent-blue); margin: 1rem 0;
+}
+.membership-features {
+  list-style: none; text-align: left;
+  margin: 1.5rem 0;
+}
+.membership-features li {
+  padding: 8px 0; font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex; align-items: center; gap: 8px;
+}
+.membership-features li::before {
+  content: '✓'; color: var(--accent-green); font-weight: 700;
+}
+.membership-features li.disabled { color: var(--text-muted); text-decoration: line-through; }
+.membership-features li.disabled::before { content: '✗'; color: var(--text-muted); }
+
+/* Admin */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 70px);
+}
+.admin-sidebar {
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 0;
+}
+.admin-sidebar a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 1.5rem;
+  color: var(--text-secondary);
+  text-decoration: none; font-size: 14px;
+  transition: var(--transition);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+.admin-sidebar a:hover, .admin-sidebar a.active {
+  background: var(--glow-blue);
+  color: var(--accent-blue);
+  border-left-color: var(--accent-blue);
+}
+.admin-content { padding: 2rem; }
+.admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 2rem;
+}
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.admin-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.admin-stat .number {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 900;
+  color: var(--accent-blue);
+}
+.admin-stat .label {
+  color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;
+}
+.admin-toolbar {
+  display: flex; gap: 12px; margin-bottom: 1.5rem;
+  flex-wrap: wrap; align-items: center;
+}
+.admin-toolbar input {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px; outline: none;
+  min-width: 300px;
+}
+.admin-toolbar input:focus { border-color: var(--accent-blue); }
+
+/* Comparison bar */
+.compare-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg-secondary);
+  border-top: 2px solid var(--accent-blue);
+  padding: 1rem 2rem;
+  z-index: 1500;
+  display: flex; align-items: center; justify-content: space-between;
+  animation: slideUp 0.3s ease;
+}
+.compare-items {
+  display: flex; gap: 1rem;
+}
+.compare-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.compare-item button {
+  background: none; border: none;
+  color: var(--text-muted); cursor: pointer;
+  font-size: 16px;
+}
+.compare-item button:hover { color: var(--accent-red); }
+
+/* Page header */
+.page-header {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  background: linear-gradient(180deg, var(--glow-blue), transparent);
+}
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+.page-header p { color: var(--text-secondary); }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.tab {
+  padding: 12px 20px;
+  background: none; border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 500;
+  cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+}
+.tab:hover { color: var(--text-secondary); }
+.tab.active {
+  color: var(--accent-blue);
+  border-bottom-color: var(--accent-blue);
+}
+
+/* Search results */
+.search-results-group {
+  margin-bottom: 2rem;
+}
+.search-results-group h3 {
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.result-count {
+  background: var(--accent-blue);
+  color: white;
+  padding: 2px 10px; border-radius: 100px;
+  font-size: 0.75rem;
+}
+.search-result-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.search-result-item:hover {
+  border-color: var(--accent-blue);
+  transform: translateX(4px);
+}
+.search-result-item h4 { font-size: 1rem; margin-bottom: 4px; }
+.search-result-item p {
+  font-size: 0.85rem; color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Pagination */
+.pagination {
+  display: flex; gap: 8px; justify-content: center;
+  margin: 2rem 0;
+}
+.page-btn {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer; transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 14px;
+}
+.page-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.page-btn.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+
+/* Loading */
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 4rem;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+.empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .page-with-sidebar { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-sidebar {
+    display: flex; overflow-x: auto;
+    border-right: none; border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+  .admin-sidebar a { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+  .admin-sidebar a.active { border-bottom-color: var(--accent-blue); }
+  .footer-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}
+@media (max-width: 768px) {
+  .header { padding: 0 1rem; height: 60px; }
+  .nav-links { display: none; }
+  .hamburger { display: block; }
+  .page { padding-top: 60px; }
+  .hero { min-height: 70vh; padding: 4rem 1rem 2rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .container { padding: 0 1rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .detail-header { flex-direction: column; }
+  .fab-consult { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .modal { margin: 1rem; padding: 1.5rem; }
+  .admin-toolbar input { min-width: 200px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-type="module">
+
+const { useState, useEffect, useCallback, useMemo, useRef, createContext, useContext } = React;
+
+// ========== TOAST SYSTEM ==========
+const ToastContext = createContext();
+function ToastProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+  const addToast = useCallback((msg, type = 'success') => {
+    const id = Date.now();
+    setToasts(p => [...p, { id, msg, type }]);
+    setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 3500);
+  }, []);
+  return (
+    <ToastContext.Provider value={addToast}>
+      {children}
+      <div className="toast-container">
+        {toasts.map(t => (
+          <div key={t.id} className={`toast toast-${t.type}`}>
+            <span>{t.type === 'success' ? '✓' : t.type === 'error' ? '✗' : 'ℹ'}</span>
+            <span>{t.msg}</span>
+          </div>
+        ))}
+      </div>
+    </ToastContext.Provider>
+  );
+}
+const useToast = () => useContext(ToastContext);
+
+// ========== ROUTER ==========
+const RouterContext = createContext();
+function useRouter() { return useContext(RouterContext); }
+function Router({ children }) {
+  const [path, setPath] = useState(window.location.hash.slice(1) || '/');
+  useEffect(() => {
+    const handler = () => setPath(window.location.hash.slice(1) || '/');
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+  const navigate = useCallback((p) => {
+    window.location.hash = p;
+    window.scrollTo(0, 0);
+  }, []);
+  return <RouterContext.Provider value={{ path, navigate }}>{children}</RouterContext.Provider>;
+}
+function Link({ to, children, className, onClick }) {
+  const { navigate } = useRouter();
+  return <a className={className} onClick={(e) => { e.preventDefault(); navigate(to); onClick && onClick(); }}
+    href={'#' + to} style={{ textDecoration: 'none' }}>{children}</a>;
+}
+
+// ========== MOCK DATA ==========
+const EXPERTS = [
+  {id:1,name:'张明辉',title:'高级焊接工程师',org:'华东激光制造研究中心',region:'上海',direction:'激光深熔焊',materials:['不锈钢','铝合金','高强钢'],industries:['汽车零部件','航空航天'],devices:['光纤激光器','机器人焊接'],service:'工艺咨询',experience:15,rating:4.9,remote:true,onsite:true,avatar:'👨‍🔧',papers:12,patents:5,cases:'参与航空发动机叶片激光焊接工艺开发',price:'联系后报价',bio:'15年激光焊接工艺研发经验，主持多项国家级课题，擅长高功率深熔焊工艺优化。'},
+  {id:2,name:'李婉清',title:'研究员',org:'先进焊接工艺实验室',region:'北京',direction:'异种材料焊接',materials:['铜铝焊接','钛合金','镍基合金'],industries:['新能源汽车','电子制造'],devices:['蓝光激光器','绿光激光器'],service:'技术方案',experience:12,rating:4.8,remote:true,onsite:false,avatar:'👩‍🔬',papers:18,patents:8,cases:'动力电池铜铝连接工艺开发项目负责人',price:'¥800/小时',bio:'专注异种金属激光焊接研究，发表SCI论文18篇，拥有8项发明专利。'},
+  {id:3,name:'王志远',title:'首席工艺师',org:'蓝光激光应用中心',region:'深圳',direction:'动力电池焊接',materials:['铝合金','铜合金','镍带'],industries:['动力电池','储能设备'],devices:['光纤激光器','振镜焊接'],service:'产线优化',experience:18,rating:5.0,remote:true,onsite:true,avatar:'👨‍💻',papers:8,patents:12,cases:'多家动力电池企业焊接产线顾问',price:'联系后报价',bio:'18年激光焊接经验，为多家头部电池企业提供焊接工艺解决方案。'},
+  {id:4,name:'陈晓峰',title:'技术总监',org:'长三角激光技术研究院',region:'苏州',direction:'激光复合焊',materials:['高强钢','不锈钢','铝合金'],industries:['轨道交通','船舶制造'],devices:['激光-MIG复合焊','机器人系统'],service:'技术研发',experience:20,rating:4.9,remote:false,onsite:true,avatar:'🧑‍🏫',papers:25,patents:15,cases:'高速列车车体激光复合焊接工艺攻关',price:'联系后报价',bio:'20年焊接技术研究经历，推动激光复合焊在轨道交通领域应用。'},
+  {id:5,name:'林雅芳',title:'博士后研究员',org:'清华激光加工实验室',region:'北京',direction:'超快激光微焊',materials:['精密电子材料','钛合金','不锈钢'],industries:['医疗器械','电子制造'],devices:['飞秒激光器','皮秒激光器'],service:'技术咨询',experience:8,rating:4.7,remote:true,onsite:false,avatar:'👩‍🎓',papers:22,patents:6,cases:'医疗器械微型器件激光焊接',price:'¥1200/小时',bio:'清华大学博士后，专注超快激光微焊接技术，发表高影响力论文22篇。'},
+  {id:6,name:'赵国强',title:'高级工程师',org:'华中科技大学焊接所',region:'武汉',direction:'激光填丝焊',materials:['铝合金','不锈钢','高强钢'],industries:['汽车零部件','航空航天'],devices:['光纤激光器','填丝焊接系统'],service:'工艺开发',experience:14,rating:4.8,remote:true,onsite:true,avatar:'👨‍🏭',papers:15,patents:9,cases:'汽车车身铝合金激光填丝焊工艺',price:'¥600/小时',bio:'14年激光焊接研发经验，铝合金填丝焊技术专家。'},
+  {id:7,name:'黄丽华',title:'教授级高工',org:'南方激光焊接中心',region:'广州',direction:'手持激光焊',materials:['不锈钢','碳钢','铝合金'],industries:['精密五金','家电制造'],devices:['手持激光焊接机','连续激光器'],service:'培训指导',experience:16,rating:4.6,remote:false,onsite:true,avatar:'👩‍🔧',papers:10,patents:7,cases:'手持激光焊工艺标准化推广',price:'联系后报价',bio:'推动手持激光焊在五金加工行业标准化应用的先驱者。'},
+  {id:8,name:'刘天宇',title:'焊接工程师',org:'西北有色金属研究院',region:'西安',direction:'钛合金焊接',materials:['钛合金','镍基合金','锆合金'],industries:['航空航天','医疗器械'],devices:['光纤激光器','真空焊接系统'],service:'工艺咨询',experience:10,rating:4.7,remote:true,onsite:true,avatar:'🧑‍🔬',papers:13,patents:4,cases:'航空钛合金薄壁结构激光焊接',price:'¥700/小时',bio:'专注活性金属激光焊接10年，解决多项航天级焊接难题。'},
+  {id:9,name:'孙鹏飞',title:'工艺工程师',org:'山东激光制造工程中心',region:'济南',direction:'厚板焊接',materials:['高强钢','碳钢','耐磨板'],industries:['工程机械','模具修复'],devices:['万瓦级激光器','激光-电弧复合'],service:'产线调试',experience:11,rating:4.5,remote:false,onsite:true,avatar:'👨‍💼',papers:6,patents:3,cases:'工程机械厚板激光焊接产线建设',price:'联系后报价',bio:'专注中厚板激光焊接工艺，为多家工程机械企业提供技术支持。'},
+  {id:10,name:'周婷',title:'技术经理',org:'深圳精密焊接技术公司',region:'深圳',direction:'精密密封焊',materials:['不锈钢','可伐合金','玻璃封接'],industries:['传感器制造','电子制造'],devices:['连续/脉冲激光器','微焊接系统'],service:'技术方案',experience:9,rating:4.8,remote:true,onsite:false,avatar:'👩‍💼',papers:7,patents:5,cases:'MEMS传感器封装激光焊接',price:'¥900/小时',bio:'精密密封焊接领域专家，服务过50+传感器制造企业。'},
+  {id:11,name:'吴建明',title:'焊接技师',org:'江苏焊接培训中心',region:'南京',direction:'摆动激光焊',materials:['铝合金','不锈钢','铜合金'],industries:['汽车零部件','家电制造'],devices:['摆动激光焊接头','光纤激光器'],service:'现场指导',experience:13,rating:4.6,remote:false,onsite:true,avatar:'🧑‍🏭',papers:4,patents:2,cases:'摆动激光焊工艺参数优化培训',price:'¥500/小时',bio:'丰富的现场焊接指导经验，培训过数百名激光焊接操作员。'},
+  {id:12,name:'郑雅琪',title:'博士研究员',org:'中科院激光所',region:'合肥',direction:'绿光激光焊',materials:['铜合金','金','铝'],industries:['动力电池','电子制造'],devices:['绿光激光器','蓝光激光器'],service:'技术研究',experience:7,rating:4.9,remote:true,onsite:false,avatar:'👩‍🔬',papers:19,patents:6,cases:'高反材料绿光激光焊接机理研究',price:'¥1000/小时',bio:'中科院博士，高反材料激光焊接基础研究领域新锐科学家。'}
+];
+
+const ARTICLES = [
+  {id:1,title:'304不锈钢激光焊接工艺要点解析',category:'激光深熔焊',materials:['不锈钢'],thickness:'1-6mm',industry:'通用制造',difficulty:'中级',views:2856,date:'2025-03-15',tags:['不锈钢','深熔焊','工艺优化'],content:{scenario:'适用于304奥氏体不锈钢的中厚板对接焊、搭接焊',principle:'利用高功率密度激光束使材料局部熔化并形成匙孔效应',equipment:'光纤激光器，功率2000-6000W',params:'功率2500-4000W，速度20-60mm/s，离焦量+2至-2mm',issues:'气孔、飞溅、热影响区硬化',solution:'控制保护气体流量、优化离焦量、预热处理',testing:'X射线检测、金相分析、硬度测试'}},
+  {id:2,title:'6061铝合金激光焊接气孔控制方法',category:'激光深熔焊',materials:['铝合金'],thickness:'1-4mm',industry:'汽车零部件',difficulty:'高级',views:3241,date:'2025-03-10',tags:['铝合金','气孔控制','6061'],content:{scenario:'适用于6系铝合金薄板及中板激光焊接',principle:'铝合金导热快、反射率高，需高功率密度和适当波长激光',equipment:'光纤激光器或绿光激光器，功率3000-6000W',params:'功率3000-5000W，速度30-80mm/s，保护气He+Ar混合',issues:'气孔率高、热裂纹、接头软化',solution:'充分清理表面氧化膜、优化保护气体、调整焊接速度',testing:'X射线、弯曲试验、拉伸试验'}},
+  {id:3,title:'铜铝异种金属激光焊接技术进展',category:'异种材料焊接',materials:['铜','铝'],thickness:'0.5-3mm',industry:'动力电池',difficulty:'专家级',views:4521,date:'2025-02-28',tags:['铜铝焊接','异种金属','动力电池'],content:{scenario:'动力电池极耳铜铝连接、汇流排焊接',principle:'铜铝熔点和导热性差异大，需精确控制热输入和中间层',equipment:'绿光/蓝光激光器或光纤激光器',params:'功率1500-3000W，速度50-100mm/s，可加中间层',issues:'金属间化合物脆性、气孔、裂纹',solution:'精确控制熔深比、添加中间层元素、优化工艺参数窗口',testing:'电阻测试、拉剪测试、金相分析'}},
+  {id:4,title:'动力电池壳体密封焊接工艺指南',category:'激光传导焊',materials:['铝合金'],thickness:'0.3-1.5mm',industry:'动力电池',difficulty:'高级',views:5120,date:'2025-03-01',tags:['密封焊','电池壳体','铝合金'],content:{scenario:'方形/圆柱动力电池铝壳顶盖密封焊',principle:'传导焊模式确保熔深浅而均匀，保证密封性',equipment:'光纤激光器+振镜系统',params:'功率800-2000W，速度100-300mm/s，摆动0.1-0.3mm',issues:'气孔导致泄漏、飞溅损伤、过焊穿孔',solution:'多道焊策略、表面预处理、在线监测',testing:'氦检漏、气密性测试、CT扫描'}},
+  {id:5,title:'手持激光焊接操作规范与安全指南',category:'手持激光焊',materials:['不锈钢','碳钢','铝合金'],thickness:'0.5-5mm',industry:'通用制造',difficulty:'初级',views:6230,date:'2025-02-20',tags:['手持焊','安全规范','操作指南'],content:{scenario:'五金加工、钣金制造、管道焊接等现场作业',principle:'光纤传输激光+摆动焊接头，灵活适应各种工况',equipment:'手持激光焊接机500-2000W',params:'功率500-1500W，摆动频率50-300Hz，送丝可选',issues:'操作者技能影响大、焊缝一致性差',solution:'标准化操作培训、工艺参数固化、安全防护',testing:'目视检查、渗透检测、弯曲试验'}},
+  {id:6,title:'钛合金激光焊接氧化控制技术',category:'激光深熔焊',materials:['钛合金'],thickness:'1-8mm',industry:'航空航天',difficulty:'专家级',views:2180,date:'2025-01-15',tags:['钛合金','氧化控制','航空航天'],content:{scenario:'航空结构件TC4钛合金激光焊接',principle:'钛合金高温活性强，需全程惰性气氛保护',equipment:'光纤激光器+氩气保护箱',params:'功率2000-4000W，速度15-40mm/s，氧含量<50ppm',issues:'焊缝氧化变色、气孔、脆化',solution:'全封闭氩气保护、优化气体流量、后热处理',testing:'颜色判定、硬度测试、疲劳测试'}},
+  {id:7,title:'激光焊接飞溅产生机理与抑制方法',category:'激光深熔焊',materials:['通用'],thickness:'通用',industry:'通用制造',difficulty:'中级',views:3890,date:'2025-02-10',tags:['飞溅','机理分析','通用工艺'],content:{scenario:'所有高功率激光深熔焊场景',principle:'匙孔塌陷和金属蒸气喷出导致飞溅',equipment:'各类光纤激光器',params:'优化功率递减曲线、降低初始功率密度',issues:'飞溅导致表面缺陷、污染光学元件',solution:'功率调制、摆动焊接、优化保护气方向',testing:'高速摄像分析、表面质量评估'}},
+  {id:8,title:'激光焊接气孔缺陷分析与对策',category:'激光深熔焊',materials:['通用'],thickness:'通用',industry:'通用制造',difficulty:'中级',views:4150,date:'2025-01-25',tags:['气孔','缺陷分析','对策'],content:{scenario:'碳钢、不锈钢、铝合金激光焊接常见问题',principle:'匙孔波动导致气体被裹入熔池',equipment:'各类激光器',params:'降低焊接速度、增大保护气流量',issues:'气孔降低接头强度和密封性',solution:'表面清洁、气体保护优化、功率调制',testing:'X射线检测、超声检测'}},
+  {id:9,title:'汽车白车身激光焊接质量控制',category:'激光复合焊',materials:['高强钢','铝合金'],thickness:'0.7-2.5mm',industry:'汽车零部件',difficulty:'高级',views:2930,date:'2025-03-05',tags:['汽车','白车身','质量控制'],content:{scenario:'汽车白车身车顶、侧围激光钎焊',principle:'激光钎焊采用低熔点填充材料连接板材',equipment:'光纤激光器+送丝系统+机器人',params:'功率2500-4000W，速度40-80mm/s',issues:'钎焊缝外观不良、间隙桥接能力不足',solution:'优化送丝角度和速度、精确轨迹控制',testing:'外观检查、剪切试验、盐雾试验'}},
+  {id:10,title:'蓝光激光器在铜焊接中的应用',category:'蓝光激光焊',materials:['铜','铜合金'],thickness:'0.5-5mm',industry:'电子制造',difficulty:'中级',views:3650,date:'2025-02-15',tags:['蓝光激光器','铜焊接','高吸收率'],content:{scenario:'铜母排、铜管、铜线束等高反材料焊接',principle:'蓝光波长450nm在铜材料吸收率高达65%',equipment:'蓝光激光器500-4000W',params:'功率500-2000W，速度20-60mm/s',issues:'热积累、气孔',solution:'脉冲调制、摆动焊接、夹具散热设计',testing:'电阻测试、金相分析'}},
+  {id:11,title:'不锈钢薄板激光焊接变形控制',category:'薄板焊接',materials:['不锈钢'],thickness:'0.3-1.5mm',industry:'精密五金',difficulty:'高级',views:2450,date:'2025-03-12',tags:['薄板焊接','变形控制','不锈钢'],content:{scenario:'精密五金件、厨具、管件等薄板不锈钢焊接',principle:'薄板热容量小，易变形，需精确热输入控制',equipment:'脉冲/连续光纤激光器',params:'功率200-800W，速度50-150mm/s，脉冲模式可选',issues:'变形、烧穿、焊缝成形不良',solution:'脉冲焊接、分段焊接、夹具约束、预拉伸',testing:'三坐标测量、平整度检测'}},
+  {id:12,title:'高强钢激光焊接热影响区软化分析',category:'激光深熔焊',materials:['高强钢'],thickness:'1-6mm',industry:'汽车零部件',difficulty:'高级',views:1890,date:'2025-02-08',tags:['高强钢','软化','热影响区'],content:{scenario:'汽车用先进高强钢(AHSS)激光焊接',principle:'热影响区经历回火导致马氏体分解软化',equipment:'高功率光纤激光器',params:'高焊速(>60mm/s)可减小软化区',issues:'软化区成为接头薄弱环节',solution:'提高焊接速度、双面焊、焊后热处理',testing:'显微硬度、拉伸测试'}},
+  {id:13,title:'激光焊接在线监测技术综述',category:'激光深熔焊',materials:['通用'],thickness:'通用',industry:'通用制造',difficulty:'中级',views:3120,date:'2025-01-30',tags:['在线监测','质量控制','传感器'],content:{scenario:'所有要求高质量焊缝的激光焊接场景',principle:'利用光电传感器、视觉系统实时监测焊接过程',equipment:'同轴视觉、等离子体传感器、温度传感器',params:'采样频率1-20kHz',issues:'信号解读困难、设备成本高',solution:'多传感器融合、AI算法辅助判断',testing:'实时缺陷检测、焊缝质量预测'}},
+  {id:14,title:'摆动激光焊接工艺参数优化',category:'摆动激光焊',materials:['铝合金','不锈钢'],thickness:'1-4mm',industry:'汽车零部件',difficulty:'中级',views:2780,date:'2025-03-08',tags:['摆动焊','参数优化','工艺改进'],content:{scenario:'铝合金、不锈钢中板对接和搭接焊',principle:'激光束高频摆动扩大热作用区域',equipment:'摆动焊接头+光纤激光器',params:'频率50-300Hz，幅度0.5-3mm，圆形/∞形轨迹',issues:'参数组合复杂、优化周期长',solution:'DOE实验设计、数值模拟辅助',testing:'金相分析、力学性能测试'}},
+  {id:15,title:'激光焊接焊缝跟踪技术方案',category:'激光复合焊',materials:['通用'],thickness:'通用',industry:'通用制造',difficulty:'中级',views:1960,date:'2025-02-25',tags:['焊缝跟踪','视觉系统','自动化'],content:{scenario:'自动化激光焊接产线',principle:'激光视觉传感实时识别焊缝位置',equipment:'结构光视觉传感器、激光线扫描仪',params:'跟踪精度±0.1mm，响应时间<10ms',issues:'飞溅干扰、反射干扰',solution:'多模态传感器融合、滤波算法',testing:'跟踪精度验证'}},
+  {id:16,title:'医疗器械微型激光焊接技术',category:'超快激光微焊',materials:['不锈钢','钛合金','镍钛合金'],thickness:'0.05-1mm',industry:'医疗器械',difficulty:'专家级',views:1650,date:'2025-01-20',tags:['医疗器械','微焊接','精密'],content:{scenario:'心脏支架、手术器械、植入物焊接',principle:'超短脉冲激光实现低热输入精密连接',equipment:'皮秒/飞秒激光器，微焊接系统',params:'脉宽<10ps，单脉冲能量μJ级',issues:'热影响区控制、对位精度',solution:'同轴视觉对位、脉冲能量精确控制',testing:'显微镜检测、生物相容性'}},
+  {id:17,title:'激光焊接保护气体选择指南',category:'激光深熔焊',materials:['通用'],thickness:'通用',industry:'通用制造',difficulty:'初级',views:5430,date:'2025-02-05',tags:['保护气体','氩气','氦气'],content:{scenario:'所有激光焊接场景的气体选择参考',principle:'保护气体防止氧化并影响等离子体行为',equipment:'气体供应系统',params:'氩气15-25L/min，氦气20-40L/min',issues:'气流量不当导致气孔或氧化',solution:'根据材料和功率选择合适气体类型和流量',testing:'焊缝颜色、气孔率检测'}},
+  {id:18,title:'激光填丝焊接工艺与应用',category:'激光填丝焊',materials:['铝合金','不锈钢','高强钢'],thickness:'2-10mm',industry:'航空航天',difficulty:'高级',views:2340,date:'2025-03-18',tags:['填丝焊','间隙桥接','厚板'],content:{scenario:'中厚板对接焊、大间隙接头填充',principle:'填充焊丝扩大熔池并改善接头成分',equipment:'光纤激光器+送丝机构',params:'功率3000-8000W，送丝速度2-8m/min',issues:'送丝精度、飞溅、成形不良',solution:'优化送丝角度和速度、匹配功率和焊速',testing:'无损检测、力学性能'}},
+  {id:19,title:'动力电池焊接缺陷案例分析',category:'激光传导焊',materials:['铝合金','铜'],thickness:'0.2-2mm',industry:'动力电池',difficulty:'高级',views:3870,date:'2025-03-20',tags:['缺陷案例','电池焊接','质量分析'],content:{scenario:'电池极耳、壳体、防爆阀等关键焊缝',principle:'密封性和导电性双重要求',equipment:'光纤/绿光激光器+振镜系统',params:'依据具体部件调整',issues:'虚焊、过焊、密封不良、飞溅',solution:'多段功率策略、在线监测、SPC控制',testing:'气密性、电阻、X-ray'}},
+  {id:20,title:'模具激光熔覆修复技术',category:'激光复合焊',materials:['模具钢','镍基合金','碳化钨'],thickness:'0.5-5mm',industry:'模具修复',difficulty:'高级',views:2150,date:'2025-02-18',tags:['模具修复','熔覆','表面工程'],content:{scenario:'注塑模具、冲压模具磨损和裂纹修复',principle:'激光熔覆实现局部增材修复',equipment:'光纤激光器+送粉系统',params:'功率1000-3000W，送粉率10-30g/min',issues:'裂纹、气孔、稀释率',solution:'预热处理、多层多道策略、后热处理',testing:'硬度、结合强度、金相'}},
+];
+
+const MATERIALS = [
+  {id:1,name:'304不锈钢',category:'不锈钢',grades:'304, 304L, 304H',difficulty:'中等',laser:'光纤/碟片',defects:['气孔','热裂纹','敏化'],industries:['通用制造','食品设备','化工'],absorption:'对1064nm吸收率约35%',characteristics:'奥氏体不锈钢，耐腐蚀性好，无磁性',weldingPoints:'注意热输入控制防止敏化，控制层间温度',gas:'氩气/氦气，15-25L/min',params:'功率2000-4000W，速度20-60mm/s'},
+  {id:2,name:'316L不锈钢',category:'不锈钢',grades:'316L, 316, 316Ti',difficulty:'中等',laser:'光纤/碟片',defects:['气孔','热裂纹','钼偏析'],industries:['化工','医疗器械','海洋工程'],absorption:'对1064nm吸收率约35%',characteristics:'含钼奥氏体不锈钢，耐点蚀性优异',weldingPoints:'钼含量高需注意热裂纹，低碳型抗敏化',gas:'氩气/氦气，15-25L/min',params:'功率2000-4000W，速度20-50mm/s'},
+  {id:3,name:'6061铝合金',category:'铝合金',grades:'6061-T6, 6061-T4',difficulty:'较高',laser:'光纤/绿光',defects:['气孔','热裂纹','软化'],industries:['汽车零部件','航空航天','电子'],absorption:'对1064nm吸收率约8%，对532nm约20%',characteristics:'Al-Mg-Si系可热处理铝合金，强度中等',weldingPoints:'表面氧化膜需清理，注意气孔和HAZ软化',gas:'高纯氩气，20-30L/min',params:'功率3000-5000W，速度30-80mm/s'},
+  {id:4,name:'7075铝合金',category:'铝合金',grades:'7075-T6, 7075-T73',difficulty:'很高',laser:'光纤/绿光',defects:['热裂纹','气孔','严重软化','液化裂纹'],industries:['航空航天','军工'],absorption:'对1064nm吸收率约8%',characteristics:'Al-Zn-Mg-Cu系超高强铝合金',weldingPoints:'焊接性差，热裂纹敏感性极高，HAZ软化严重',gas:'高纯氦气或氦氩混合，25-35L/min',params:'功率4000-6000W，速度>60mm/s，高焊速减少热输入'},
+  {id:5,name:'TC4钛合金',category:'钛合金',grades:'Ti-6Al-4V, TC4ELI',difficulty:'很高',laser:'光纤',defects:['氧化','气孔','脆化','冷裂纹'],industries:['航空航天','医疗器械','化工'],absorption:'对1064nm吸收率约55%',characteristics:'α+β型钛合金，比强度高，耐腐蚀',weldingPoints:'全程惰性气氛保护，氧含量<50ppm',gas:'高纯氩气(99.999%)，保护箱+拖罩',params:'功率2000-4000W，速度15-40mm/s'},
+  {id:6,name:'T2紫铜',category:'铜及铜合金',grades:'T2, TU1, TP2',difficulty:'很高',laser:'蓝光/绿光',defects:['未熔合','气孔','飞溅','热裂纹'],industries:['电子制造','电力','动力电池'],absorption:'1064nm约5%，450nm约65%，532nm约30%',characteristics:'纯铜，导电导热极好，反射率高',weldingPoints:'高反射率是最大挑战，绿光/蓝光激光器优势明显',gas:'氩气/氮气混合，20-30L/min',params:'蓝光1000-2000W/30-60mm/s'},
+  {id:7,name:'铜铝异种金属',category:'异种金属组合',grades:'T2+1060, T2+6061, 铜+铝',difficulty:'极高',laser:'绿光/蓝光/光纤',defects:['金属间化合物','裂纹','气孔','脆性断裂'],industries:['动力电池','电力电子','新能源'],absorption:'需同时考虑铜铝两侧吸收差异',characteristics:'熔点和导热性差异大，IMC层是关键',weldingPoints:'精确控制铜铝侧熔深比，添加中间层或偏置焊接',gas:'氩气保护，20-25L/min',params:'绿光1500-3000W，速度50-100mm/s'},
+  {id:8,name:'镍基合金',category:'镍基合金',grades:'Inconel 718, Inconel 625, GH4169',difficulty:'高',laser:'光纤',defects:['热裂纹','气孔','应变时效裂纹'],industries:['航空航天','化工','核电'],absorption:'对1064nm吸收率约40%',characteristics:'高温合金，耐热耐腐蚀性极佳',weldingPoints:'注意焊后时效处理，防止液化裂纹',gas:'氩气，18-25L/min',params:'功率2500-4500W，速度20-50mm/s'},
+  {id:9,name:'先进高强钢',category:'高强钢',grades:'DP980, QP1180, 22MnB5, MS1500',difficulty:'高',laser:'光纤',defects:['HAZ软化','冷裂纹','液化裂纹'],industries:['汽车零部件','军工','轨道交通'],absorption:'对1064nm吸收率约30-40%',characteristics:'超高强度汽车用钢，抗拉>980MPa',weldingPoints:'HAZ软化是主要问题，需高焊速控制热输入',gas:'氩气+CO₂混合，15-20L/min',params:'功率3000-6000W，速度>60mm/s'},
+  {id:10,name:'动力电池铝壳材料',category:'动力电池材料',grades:'3003铝合金, 3003-O',difficulty:'中等',laser:'光纤/绿光',defects:['密封不良','飞溅','烧穿','气孔'],industries:['动力电池','储能设备'],absorption:'对1064nm约8%，对532nm约20%',characteristics:'3系铝合金，深冲性能好，焊接性较好',weldingPoints:'壁厚薄(0.3-1mm)需精确控制，密封性要求极高',gas:'高纯氩气，12-20L/min',params:'功率800-2000W，速度100-300mm/s'},
+  {id:11,name:'镁合金',category:'镁合金',grades:'AZ31B, AZ61, AZ91D',difficulty:'极高',laser:'光纤',defects:['气孔','热裂纹','氧化燃烧','蒸发'],industries:['汽车零部件','航空航天','3C'],absorption:'对1064nm吸收率约10%',characteristics:'最轻结构金属，比强度高，活泼金属',weldingPoints:'易氧化燃烧，需严格气氛保护，蒸发损失大',gas:'氩气保护，20-30L/min',params:'功率1000-2500W，速度40-100mm/s'},
+  {id:12,name:'可伐合金',category:'精密电子材料',grades:'4J29, 4J42',difficulty:'中等',laser:'光纤/脉冲',defects:['气孔','裂纹','封接应力'],industries:['传感器制造','电子封装','MEMS'],absorption:'对1064nm吸收率约35%',characteristics:'膨胀系数可调，与玻璃/陶瓷封接',weldingPoints:'精密密封焊要求极高表面质量和工艺稳定性',gas:'高纯氩气，10-15L/min',params:'功率200-800W，速度30-80mm/s'},
+  {id:13,name:'双相不锈钢',category:'不锈钢',grades:'2205, 2507, S32750',difficulty:'中高',laser:'光纤',defects:['相平衡失调','σ相析出','气孔'],industries:['化工','海洋工程','油气'],absorption:'对1064nm吸收率约35%',characteristics:'奥氏体+铁素体双相组织，强度高耐腐蚀',weldingPoints:'控制铁素体含量40-60%，避免σ相',gas:'氩气+2%N₂，18-25L/min',params:'功率2500-4500W，速度25-50mm/s'},
+  {id:14,name:'镍钛合金',category:'精密电子材料',grades:'Nitinol, NiTi',difficulty:'极高',laser:'光纤/脉冲',defects:['热影响区相变','脆化','裂纹','氧化'],industries:['医疗器械','航空航天'],absorption:'对1064nm吸收率约30%',characteristics:'形状记忆合金，超弹性',weldingPoints:'极窄工艺窗口，HAZ性能退化严重',gas:'高纯氩气保护箱',params:'低功率脉冲100-500W，极低热输入'},
+  {id:15,name:'低碳钢',category:'碳钢',grades:'Q235, SPCC, DC01, SAE1008',difficulty:'低',laser:'光纤',defects:['气孔','咬边','飞溅'],industries:['通用制造','汽车零部件','家电'],absorption:'对1064nm吸收率约30%',characteristics:'焊接性最好的钢种，应用最广',weldingPoints:'工艺参数窗口大，注意飞溅和成形',gas:'CO₂/Ar混合或纯氩，15-25L/min',params:'功率2000-5000W，速度30-80mm/s'},
+];
+
+const DEFECTS = [
+  {id:1,name:'气孔',materials:['铝合金','不锈钢','碳钢'],causes:['表面污染','保护气不足','匙孔波动'],risk:'中',direction:'清洁表面，优化保护气，调整功率',definition:'焊缝内部或表面出现的球形或不规则空腔',symptoms:'焊缝表面可见小孔，X射线检测显示暗斑',steps:['检查表面清洁度','检查保护气流量和方向','检查激光功率稳定性','调整焊接速度'],measures:['化学清洗表面','增大保护气流量','采用脉冲模式','优化离焦量'],relatedParams:'保护气体流量15-30L/min，功率适当降低'},
+  {id:2,name:'裂纹',materials:['铝合金','高强钢','镍基合金','钛合金'],causes:['热应力过大','低熔点共晶偏析','氢含量高'],risk:'高',direction:'控制热输入，优化填充材料，预热/后热',definition:'焊缝或热影响区出现的线性不连续缺陷',symptoms:'表面裂纹或内部裂纹，影响结构完整性',steps:['分析裂纹类型(热裂纹/冷裂纹)','检查材料成分匹配性','评估热输入和冷却速率','检查填充材料选择'],measures:['预热至150-200°C','优化功率速度比','选择合适填充材料','焊后热处理'],relatedParams:'控制冷却速率，适当预热温度'},
+  {id:3,name:'飞溅',materials:['不锈钢','碳钢','铝合金'],causes:['功率密度过高','匙孔不稳定','表面状态差'],risk:'低-中',direction:'优化功率曲线，改善表面状态，调整保护气',definition:'焊接过程中熔融金属颗粒飞出附着在工件表面',symptoms:'焊缝两侧散落金属颗粒，表面粗糙',steps:['检查功率密度是否过高','检查表面是否有油污','调整保护气角度','检查材料表面状态'],measures:['功率递减曲线焊接','清洁工件表面','优化保护气方向','适当增加焊接速度'],relatedParams:'初始功率降低10-20%，保护气角度调整'},
+  {id:4,name:'咬边',materials:['不锈钢','碳钢','高强钢'],causes:['功率过高','速度过快','焦点位置不当'],risk:'中-高',direction:'优化功率和速度匹配，调整焦点位置',definition:'焊缝边缘母材被过度熔化形成的沟槽',symptoms:'焊缝边缘出现凹陷，减小有效截面',steps:['检查功率和速度匹配','调整焦点位置(降低功率密度)','检查摆动参数','评估保护气流量'],measures:['适当降低功率','降低焊接速度','调整焦点至工件表面以下','减小摆动幅度'],relatedParams:'功率降低15-20%，速度降低10%'},
+  {id:5,name:'未焊透',materials:['不锈钢','碳钢','铝合金','高强钢'],causes:['功率不足','速度过快','间隙过大','焦点不当'],risk:'高',direction:'增大功率，降低速度，调整焦点',definition:'焊缝根部未完全熔透母材',symptoms:'焊缝底部未形成连续熔合线',steps:['检查功率是否达到要求','检查焦点位置','评估接头间隙','检查装配质量'],measures:['提高激光功率','降低焊接速度','调整焦点至表面以下','改善装配精度'],relatedParams:'功率增加20-30%，速度降低20%'},
+  {id:6,name:'未熔合',materials:['不锈钢','碳钢','高强钢'],causes:['热输入不足','坡口角度不当','偏焊'],risk:'高',direction:'增加热输入，优化坡口设计，精确对中',definition:'焊缝与母材或焊道之间未形成冶金结合',symptoms:'接头强度明显下降',steps:['检查焊道对中','评估坡口设计','检查功率和速度设置','分析保护气流量影响'],measures:['调整焊枪对中','增大坡口角度','提高功率或降低速度','优化摆动参数'],relatedParams:'功率增加15%，摆动幅度增大'},
+  {id:7,name:'塌陷',materials:['铝合金','不锈钢'],causes:['功率过高','熔池支撑不足','背面保护不当'],risk:'中',direction:'降低功率，优化背面支撑，调整工艺',definition:'焊缝表面或根部出现凹陷塌落',symptoms:'焊缝表面不平整，焊缝余高不足或为负',steps:['检查功率是否过高','评估熔池支撑条件','检查背面保护气','检查工件装夹'],measures:['降低激光功率','使用铜垫板支撑','优化脉冲参数','减小热输入'],relatedParams:'功率降低20%，增加脉冲间隔'},
+  {id:8,name:'烧穿',materials:['铝合金','不锈钢','铜合金'],causes:['功率过大','速度过慢','材料过薄','散热不良'],risk:'高',direction:'降低功率，提高速度，改善散热',definition:'焊缝处材料被完全熔穿形成孔洞',symptoms:'工件出现穿透性孔洞',steps:['检查功率和速度','评估材料厚度适用性','检查夹具散热','检查焦点位置'],measures:['降低功率50%以上','提高焊接速度','使用脉冲模式','增加铜衬板散热'],relatedParams:'功率大幅降低，速度提高30-50%'},
+  {id:9,name:'焊缝发黑',materials:['不锈钢','碳钢'],causes:['氧化严重','保护气不足','焊后高温接触空气'],risk:'低-中',direction:'增强保护气，控制焊后冷却环境',definition:'焊缝及附近区域表面氧化变色发黑',symptoms:'焊缝表面呈蓝色、紫色或黑色',steps:['检查保护气流量','检查喷嘴位置和角度','评估保护范围','检查焊后冷却环境'],measures:['增大保护气流量','优化喷嘴设计','使用拖罩保护','控制冷却环境'],relatedParams:'保护气增加30-50%，加装尾部保护'},
+  {id:10,name:'焊缝成形不良',materials:['通用'],causes:['参数不匹配','送丝不稳','振镜偏移','焦点漂移'],risk:'中',direction:'全面检查参数匹配性和设备状态',definition:'焊缝宽度不均匀、表面不平整、鱼鳞纹不规则',symptoms:'焊缝外观质量差',steps:['检查功率/速度/送丝匹配','校准振镜','检查焦点稳定性','评估工艺参数窗口'],measures:['DOE优化参数组合','校准光学系统','稳定送丝系统','使用在线监控'],relatedParams:'系统性参数优化'},
+  {id:11,name:'变形',materials:['不锈钢','铝合金','薄板材料'],causes:['热输入过大','拘束不足','焊接顺序不当'],risk:'中',direction:'减小热输入，优化夹具和焊接顺序',definition:'焊后工件发生翘曲、弯曲等几何变形',symptoms:'工件尺寸超差，装配困难',steps:['测量变形量','评估热输入是否过大','检查夹具设计','分析焊接顺序'],measures:['减小热输入','优化焊接顺序','使用反变形法','增加工艺加强筋'],relatedParams:'功率降低，速度提高，分段焊接'},
+  {id:12,name:'夹杂',materials:['高强钢','钛合金','镍基合金'],causes:['氧化物卷入','保护气卷入','前道焊渣未清'],risk:'中-高',direction:'改善保护条件，清洁焊道，优化工艺',definition:'焊缝金属中残留的非金属固体夹杂物',symptoms:'X射线或超声检测发现异常信号',steps:['分析夹杂物类型','检查保护气效果','评估多层焊清洁度','检查焊丝质量'],measures:['增强保护效果','道间彻底清洁','优化焊接参数','检查原材料清洁度'],relatedParams:'增强保护，清洁焊道'},
+  {id:13,name:'表面氧化',materials:['钛合金','铜合金','铝合金'],causes:['保护气覆盖不全','高温接触空气','流量不足'],risk:'中',direction:'全封闭保护，增大流量，控制冷却',definition:'焊缝表面因氧化反应变色或产生氧化膜',symptoms:'表面变色(蓝/紫/黑)，性能下降',steps:['检查保护气覆盖范围','评估高温暴露时间','检查气体纯度','评估喷嘴设计'],measures:['使用保护箱/拖罩','增大流量/纯度','缩短高温暴露时间','优化喷嘴设计'],relatedParams:'气体纯度>99.999%，流量增加50%'},
+  {id:14,name:'强度不足',materials:['高强钢','铝合金','异种金属'],causes:['HAZ软化','缺陷超标','组织劣化','IMC层过厚'],risk:'高',direction:'优化热输入，控制HAZ组织，减少缺陷',definition:'焊接接头抗拉或疲劳强度不满足使用要求',symptoms:'接头断裂于焊缝或HAZ',steps:['分析断裂位置和模式','测试各区硬度分布','检查微观组织','评估缺陷类型和数量'],measures:['优化热输入和焊速','焊后热处理恢复性能','控制缺陷','选择匹配焊材'],relatedParams:'提高焊速减小HAZ，必要时焊后时效处理'},
+];
+
+const CASES = [
+  {id:1,title:'某新能源汽车电池包激光焊接方案',industry:'动力电池',material:'3003铝合金',process:'激光传导焊',device:'光纤激光器+振镜',problem:'电池包顶盖密封焊接气孔率超标',solution:'优化保护气策略+脉冲调制',result:'气孔率从3.5%降至0.3%以下',background:'国内TOP5动力电池企业，月产10万+电池包',detail:'项目通过优化保护气策略、引入脉冲功率调制和改进夹具设计，成功将焊接气孔率从3.5%降低至0.3%以下，产品良率提升12%，年节约成本约800万元。'},
+  {id:2,title:'汽车白车身激光钎焊质量提升',industry:'汽车零部件',material:'DC04低碳钢',process:'激光钎焊',device:'光纤激光器+送丝系统',problem:'车顶钎焊缝外观不良率高',solution:'工艺参数DOE优化+视觉在线检测',result:'外观合格率从89%提升至99.2%',background:'国内知名合资车企焊装车间',detail:'系统性优化激光功率、焊丝送给速度和机器人轨迹，引入在线视觉检测系统实现实时质量监控，外观合格率提升10.2个百分点。'},
+  {id:3,title:'航空发动机叶片激光焊接工艺开发',industry:'航空航天',material:'Inconel 718',process:'激光深熔焊',device:'碟片激光器',problem:'叶片与榫头焊接裂纹频繁',solution:'精确预热+优化焊接顺序+后热处理',result:'裂纹率降至0.1%以下',background:'航空发动机关键零部件供应商',detail:'针对镍基高温合金的焊接难点，开发了精确温控预热方案、优化焊接路径和焊后时效处理工艺，实现了航空级质量要求。'},
+  {id:4,title:'动力电池铜铝汇流排焊接',industry:'动力电池',material:'铜铝异种金属',process:'激光焊接',device:'绿光激光器',problem:'铜铝焊接界面金属间化合物导致电阻过大',solution:'偏置焊接策略+精确热输入控制',result:'焊接电阻降低60%，一致性显著提升',background:'新能源汽车Tier1供应商',detail:'采用绿光激光器配合偏置焊接策略，精确控制铜铝两侧的熔深比，有效抑制金属间化合物层厚度，焊接电阻从150μΩ降至60μΩ。'},
+  {id:5,title:'不锈钢厨具激光焊接产线改造',industry:'家电制造',material:'304不锈钢',process:'手持激光焊',device:'手持激光焊接机',problem:'传统弧焊效率低、变形大',solution:'引入手持激光焊+标准化工艺包',result:'焊接效率提升3倍，变形量减少70%',background:'国内知名厨具品牌制造工厂',detail:'将传统TIG焊接替换为手持激光焊接，开发了针对不同产品的标准化工艺参数包，配合专业培训，焊接效率提升300%，返修率从15%降至3%。'},
+  {id:6,title:'医疗器械支架激光微焊接',industry:'医疗器械',material:'镍钛合金',process:'超快激光微焊',device:'飞秒激光器',problem:'心脏支架焊接热影响区过大影响超弹性',solution:'飞秒激光微焊接+脉冲参数优化',result:'HAZ减小80%，超弹性保持率>95%',background:'国内领先医疗器械制造商',detail:'采用飞秒激光器实现极低热输入焊接，热影响区从传统100μm缩小至20μm以内，完美保持了镍钛合金的超弹性和生物相容性。'},
+  {id:7,title:'轨道交通车体激光复合焊接',industry:'轨道交通',material:'6005A铝合金',process:'激光-MIG复合焊',device:'激光复合焊接系统',problem:'车体长焊缝焊接变形控制困难',solution:'激光复合焊+优化焊接顺序+反变形工装',result:'焊接变形减少60%，生产效率提升50%',background:'国内头部轨道交通装备制造商',detail:'采用激光-MIG复合焊替代传统MIG焊，配合分段对称焊接顺序和反变形工装设计，变形量减少60%，同时焊接速度提高50%。'},
+  {id:8,title:'传感器封装激光密封焊',industry:'传感器制造',material:'可伐合金',process:'精密密封焊',device:'脉冲激光焊接系统',problem:'MEMS传感器封装密封性不达标',solution:'脉冲激光精密密封焊+气氛控制',result:'泄漏率从10⁻⁵降至10⁻⁹Pa·m³/s',background:'国内TOP3传感器制造商',detail:'针对MEMS传感器的超高密封性要求，开发了脉冲激光密封焊工艺，严格控制焊接气氛和脉冲时序，实现了超高气密性。'},
+  {id:9,title:'注塑模具激光熔覆修复',industry:'模具修复',material:'H13模具钢',process:'激光熔覆',device:'光纤激光器+送粉系统',problem:'大型注塑模具分型面磨损严重',solution:'激光熔覆修复+后加工',result:'模具寿命恢复至新品90%以上，成本仅为新品30%',background:'精密注塑模具工厂',detail:'对磨损量0.5-3mm的分型面进行激光熔覆修复，选用匹配粉末材料，修复后经精密加工，尺寸精度恢复至±0.02mm，成本仅为新制模具的30%。'},
+  {id:10,title:'储能液冷板激光焊接',industry:'储能设备',material:'3003/6061铝合金',process:'激光传导焊',device:'光纤激光器+振镜',problem:'液冷板焊接变形导致流道堵塞',solution:'低功率脉冲焊+分段焊策略+夹具优化',result:'变形量<0.1mm，通水测试100%合格',background:'国内头部储能设备制造商',detail:'针对超薄壁(0.5mm)液冷板的焊接难题，开发了脉冲-连续交替焊接策略，配合高精度铜夹具散热，变形控制在0.1mm以内。'},
+  {id:11,title:'3C产品金属壳体焊接',industry:'电子制造',material:'6系铝合金',process:'精密激光焊',device:'光纤激光器+视觉定位',problem:'手机中框焊接表面质量要求极高',solution:'摆动激光焊+在线视觉检测',result:'外观合格率99.5%，满足消费电子要求',background:'消费电子OEM/ODM制造商',detail:'针对消费电子产品对外观和精度的极致要求，开发了摆动激光焊工艺配合在线视觉检测，实现焊缝表面均匀、变形极小。'},
+  {id:12,title:'化工管道激光焊接方案',industry:'化工装备',material:'316L不锈钢',process:'激光填丝焊',device:'光纤激光器+管道焊机',problem:'化工管道焊缝耐蚀性不达标',solution:'激光填丝焊+焊后固溶处理',result:'焊缝耐蚀性达到母材95%以上',background:'大型化工设备制造商',detail:'采用激光填丝焊配合专用耐蚀焊丝，焊后进行固溶处理恢复耐蚀性，焊缝区域的耐点蚀性能达到母材的95%以上。'},
+  {id:13,title:'新能源汽车电机壳体焊接',industry:'新能源汽车',material:'A356铝合金',process:'激光填丝焊',device:'光纤激光器',problem:'电机壳体焊接气密性不达标',solution:'多道填丝焊+气密性在线检测',result:'气密性泄漏率<1×10⁻⁶Pa·m³/s',background:'新能源汽车驱动电机制造商',detail:'针对大型薄壁电机壳体的高气密性要求，采用双道激光填丝焊工艺，配合氦检漏在线检测，实现零泄漏。'},
+  {id:14,title:'工程机械液压油缸焊接',industry:'工程机械',material:'27SiMn高强钢',process:'激光-电弧复合焊',device:'万瓦级激光+MAG复合',problem:'油缸焊缝疲劳寿命不满足要求',solution:'激光-MAG复合焊+优化接头设计',result:'疲劳寿命提升3倍',background:'工程机械龙头企业',detail:'采用万瓦级激光-MAG复合焊替代传统埋弧焊，焊缝成形改善、残余应力降低，疲劳寿命从5万次提升至15万次以上。'},
+  {id:15,title:'精密连接器激光焊接',industry:'电子制造',material:'铜合金镀金',process:'精密激光焊',device:'脉冲光纤激光器',problem:'镀金层焊接时烧蚀严重',solution:'超短脉冲精密焊接+能量精确控制',result:'镀金层保持率>90%，焊点合格率99%',background:'高端连接器制造商',detail:'采用微秒脉冲激光精确控制每个脉冲能量，在保证焊接强度的同时最大限度保留了镀金层。'},
+  {id:16,title:'船舶钢板激光切割焊接一体化',industry:'船舶制造',material:'船用高强钢AH36',process:'激光复合焊',device:'高功率激光+等离子复合',problem:'传统造船焊接效率低、变形大',solution:'激光切割焊一体化+大功率复合焊',result:'焊接速度提升4倍，变形减少50%',background:'大型造船企业',detail:'在船体平面分段制造中引入激光切割-焊接一体化方案，采用大功率激光-电弧复合焊，大幅提高生产效率。'},
+];
+
+const EQUIPMENT_PARAMS = [
+  {id:1,material:'304不锈钢',thickness:'2mm',method:'深熔焊',laserPower:'2000-3000W',speed:'30-50mm/s',defocus:'-1至+1mm',spot:'0.3mm',gas:'氩气',gasFlow:'18-22L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'薄板焊接',device:'光纤激光器'},
+  {id:2,material:'304不锈钢',thickness:'4mm',method:'深熔焊',laserPower:'3000-4500W',speed:'20-35mm/s',defocus:'-2至0mm',spot:'0.4mm',gas:'氩气',gasFlow:'20-25L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'中板焊接',device:'光纤激光器'},
+  {id:3,material:'6061铝合金',thickness:'2mm',method:'深熔焊',laserPower:'3000-4000W',speed:'40-70mm/s',defocus:'0至+2mm',spot:'0.3mm',gas:'氦气/氩气',gasFlow:'22-28L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'汽车零部件',device:'光纤激光器'},
+  {id:4,material:'6061铝合金',thickness:'1mm',method:'传导焊',laserPower:'800-1500W',speed:'80-150mm/s',defocus:'+1至+3mm',spot:'0.6mm',gas:'氩气',gasFlow:'15-20L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'搭接',scene:'电池壳体',device:'光纤激光器'},
+  {id:5,material:'TC4钛合金',thickness:'3mm',method:'深熔焊',laserPower:'2500-3500W',speed:'20-35mm/s',defocus:'-1至+1mm',spot:'0.3mm',gas:'高纯氩气',gasFlow:'25-35L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'航空结构件',device:'光纤激光器'},
+  {id:6,material:'T2紫铜',thickness:'2mm',method:'深熔焊',laserPower:'1500-2500W',speed:'30-60mm/s',defocus:'0至+2mm',spot:'0.4mm',gas:'氩气',gasFlow:'20-25L/min',oscFreq:'100Hz',oscAmp:'1mm',wireSpeed:'-',joint:'对接',scene:'铜母排',device:'蓝光激光器'},
+  {id:7,material:'铜铝异种金属',thickness:'1mm/1mm',method:'传导焊',laserPower:'1000-2000W',speed:'50-100mm/s',defocus:'+1至+3mm',spot:'0.5mm',gas:'氩气',gasFlow:'18-22L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'搭接',scene:'电池极耳',device:'绿光激光器'},
+  {id:8,material:'DP980高强钢',thickness:'1.5mm',method:'深熔焊',laserPower:'2500-3500W',speed:'50-80mm/s',defocus:'-1至0mm',spot:'0.3mm',gas:'氩气+CO₂',gasFlow:'18-22L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'汽车车身',device:'光纤激光器'},
+  {id:9,material:'3003铝合金',thickness:'0.5mm',method:'传导焊',laserPower:'600-1200W',speed:'100-200mm/s',defocus:'+2至+4mm',spot:'0.8mm',gas:'氩气',gasFlow:'12-18L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'密封焊',scene:'电池顶盖',device:'光纤激光器'},
+  {id:10,material:'304不锈钢',thickness:'1mm',method:'手持焊',laserPower:'800-1200W',speed:'手动控制',defocus:'0mm',spot:'2mm',gas:'氩气',gasFlow:'15-20L/min',oscFreq:'150Hz',oscAmp:'1.5mm',wireSpeed:'1.5m/min',joint:'角焊',scene:'五金加工',device:'手持激光焊'},
+  {id:11,material:'Inconel 718',thickness:'2mm',method:'深熔焊',laserPower:'2500-3500W',speed:'20-35mm/s',defocus:'-1至+1mm',spot:'0.3mm',gas:'氩气',gasFlow:'20-25L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'航空发动机',device:'碟片激光器'},
+  {id:12,material:'304不锈钢',thickness:'0.8mm',method:'脉冲焊',laserPower:'200-500W',speed:'30-60mm/s',defocus:'0mm',spot:'0.2mm',gas:'氩气',gasFlow:'10-15L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'密封焊',scene:'传感器封装',device:'脉冲激光器'},
+  {id:13,material:'6061铝合金',thickness:'3mm',method:'填丝焊',laserPower:'3500-5000W',speed:'25-45mm/s',defocus:'0至+2mm',spot:'0.4mm',gas:'氩气',gasFlow:'20-25L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'3-5m/min',joint:'对接',scene:'汽车结构件',device:'光纤激光器'},
+  {id:14,material:'船用高强钢',thickness:'8mm',method:'复合焊',laserPower:'6000-10000W',speed:'15-30mm/s',defocus:'-2至0mm',spot:'0.6mm',gas:'氩气+CO₂',gasFlow:'22-28L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'5-8m/min',joint:'V坡口对接',scene:'船舶制造',device:'激光-电弧复合'},
+  {id:15,material:'316L不锈钢',thickness:'3mm',method:'深熔焊',laserPower:'2500-4000W',speed:'25-40mm/s',defocus:'-1至+1mm',spot:'0.3mm',gas:'氩气',gasFlow:'18-22L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'化工管道',device:'光纤激光器'},
+  {id:16,material:'H13模具钢',thickness:'2mm熔覆层',method:'激光熔覆',laserPower:'1500-2500W',speed:'8-15mm/s',defocus:'+5至+10mm',spot:'3mm',gas:'氩气',gasFlow:'15-20L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'熔覆',scene:'模具修复',device:'光纤激光器'},
+  {id:17,material:'铜合金镀金',thickness:'0.3mm',method:'精密脉冲焊',laserPower:'50-200W',speed:'点焊',defocus:'0mm',spot:'0.1mm',gas:'氩气',gasFlow:'8-12L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'搭接',scene:'电子连接器',device:'脉冲激光器'},
+  {id:18,material:'镍钛合金',thickness:'0.5mm',method:'微焊接',laserPower:'20-100W',speed:'5-20mm/s',defocus:'0mm',spot:'0.05mm',gas:'氩气',gasFlow:'8-12L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'医疗器械',device:'飞秒激光器'},
+  {id:19,material:'AZ31B镁合金',thickness:'2mm',method:'深熔焊',laserPower:'1500-2500W',speed:'50-80mm/s',defocus:'0至+2mm',spot:'0.3mm',gas:'氩气',gasFlow:'22-28L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'汽车零部件',device:'光纤激光器'},
+  {id:20,material:'双相不锈钢2205',thickness:'4mm',method:'深熔焊',laserPower:'3000-4500W',speed:'20-35mm/s',defocus:'-1至+1mm',spot:'0.4mm',gas:'氩气+N₂',gasFlow:'20-25L/min',oscFreq:'-',oscAmp:'-',wireSpeed:'-',joint:'对接',scene:'化工设备',device:'光纤激光器'},
+];
+
+const DOWNLOADS = [
+  {id:1,name:'激光焊接基础操作手册',type:'技术手册',desc:'涵盖激光焊接原理、设备操作、安全规范等基础知识',size:'15.2MB',downloads:3256,level:'free'},
+  {id:2,name:'不锈钢激光焊接指南',type:'材料指南',desc:'304/316L/双相不锈钢等常用不锈钢的焊接工艺指导',size:'8.7MB',downloads:2841,level:'free'},
+  {id:3,name:'铝合金激光焊接指南',type:'材料指南',desc:'6系/7系铝合金焊接难点分析与解决方案',size:'9.3MB',downloads:3102,level:'free'},
+  {id:4,name:'激光焊接缺陷分析速查表',type:'缺陷分析表',desc:'14种常见焊接缺陷的快速诊断和对策表',size:'5.1MB',downloads:4521,level:'free'},
+  {id:5,name:'激光焊接设备选型手册',type:'设备选型',desc:'主流激光器和焊接系统选型参数对比',size:'12.4MB',downloads:1893,level:'member'},
+  {id:6,name:'工艺参数记录模板(Excel)',type:'模板工具',desc:'标准化工艺参数记录和管理模板',size:'2.1MB',downloads:2156,level:'free'},
+  {id:7,name:'激光焊接安全操作规范',type:'安全规范',desc:'激光安全等级、防护措施和操作规程',size:'6.8MB',downloads:3678,level:'free'},
+  {id:8,name:'动力电池焊接工艺白皮书',type:'行业白皮书',desc:'动力电池各部件焊接工艺全面分析',size:'18.5MB',downloads:1245,level:'member'},
+  {id:9,name:'激光焊接质量检测标准模板',type:'检测模板',desc:'焊缝质量检测记录和判定标准模板',size:'4.2MB',downloads:1567,level:'member'},
+  {id:10,name:'2025激光焊接行业白皮书',type:'行业白皮书',desc:'激光焊接技术发展趋势和市场分析',size:'22.1MB',downloads:892,level:'member'},
+  {id:11,name:'激光焊接培训课件(PPT)',type:'培训课件',desc:'企业内部培训用激光焊接基础知识课件',size:'35.6MB',downloads:2341,level:'member'},
+  {id:12,name:'焊缝强度计算工具',type:'模板工具',desc:'焊缝强度校核计算Excel工具',size:'3.5MB',downloads:1123,level:'member'},
+];
+
+const MESSAGES_INIT = [
+  {id:1,name:'张工',company:'深圳某电子',phone:'138****1234',email:'zhang@xx.com',industry:'电子制造',material:'铜合金',problem:'铜排激光焊接飞溅太大，如何解决？',needExpert:true,status:'待处理',date:'2025-03-20'},
+  {id:2,name:'李经理',company:'江苏某汽车',phone:'139****5678',email:'li@xx.com',industry:'汽车零部件',material:'高强钢',problem:'DP980激光焊接后HAZ软化严重',needExpert:true,status:'处理中',date:'2025-03-19'},
+  {id:3,name:'王工程师',company:'成都某航空',phone:'137****9012',email:'wang@xx.com',industry:'航空航天',material:'钛合金',problem:'TC4薄壁件激光焊接变形控制',needExpert:true,status:'已完成',date:'2025-03-18'},
+  {id:4,name:'赵主任',company:'宁德某电池',phone:'136****3456',email:'zhao@xx.com',industry:'动力电池',material:'铝合金',problem:'电池顶盖焊后气密性不稳定',needExpert:true,status:'待处理',date:'2025-03-21'},
+  {id:5,name:'刘技术',company:'天津某重工',phone:'135****7890',email:'liu@xx.com',industry:'工程机械',material:'高强钢',problem:'厚板(12mm)激光焊未焊透',needExpert:false,status:'处理中',date:'2025-03-17'},
+  {id:6,name:'陈总',company:'东莞某五金',phone:'134****2345',email:'chen@xx.com',industry:'精密五金',material:'不锈钢',problem:'手持激光焊焊缝发黑严重',needExpert:false,status:'已完成',date:'2025-03-16'},
+  {id:7,name:'孙工',company:'合肥某传感器',phone:'133****6789',email:'sun@xx.com',industry:'传感器制造',material:'可伐合金',problem:'传感器封装密封焊漏气',needExpert:true,status:'待处理',date:'2025-03-22'},
+  {id:8,name:'周经理',company:'武汉某汽车',phone:'132****0123',email:'zhou@xx.com',industry:'汽车零部件',material:'铝合金',problem:'汽车铝合金副车架激光焊工艺咨询',needExpert:true,status:'处理中',date:'2025-03-15'},
+  {id:9,name:'吴工',company:'上海某医疗',phone:'131****4567',email:'wu@xx.com',industry:'医疗器械',material:'不锈钢',problem:'手术器械激光焊焊缝外观要求咨询',needExpert:false,status:'待处理',date:'2025-03-23'},
+  {id:10,name:'郑总',company:'佛山某家电',phone:'130****8901',email:'zheng@xx.com',industry:'家电制造',material:'不锈钢',problem:'计划引进手持激光焊设备，需要选型建议',needExpert:false,status:'已完成',date:'2025-03-14'},
+];
+
+// ========== LOCAL STORAGE ==========
+function useLocalStorage(key, initial) {
+  const [data, setData] = useState(() => {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : initial;
+    } catch { return initial; }
+  });
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(data));
+  }, [key, data]);
+  return [data, setData];
+}
+
+// ========== COMPONENTS ==========
+
+function Header() {
+  const { path, navigate } = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navItems = [
+    ['/', '首页'], ['/experts', '专家库'], ['/articles', '工艺知识库'],
+    ['/materials', '材料数据库'], ['/equipment', '设备与参数'],
+    ['/defects', '缺陷分析库'], ['/cases', '行业案例'],
+    ['/downloads', '资料下载'], ['/membership', '会员服务'],
+    ['/about', '关于我们'], ['/admin/login', '后台管理']
+  ];
+  return (
+    <header className="header">
+      <Link to="/" className="header-logo" onClick={() => setMobileOpen(false)}>
+        <div className="logo-icon">LW</div>
+        <span className="logo-text">激光焊接专家数据库</span>
+      </Link>
+      <ul className="nav-links">
+        {navItems.map(([to, label]) => (
+          <li key={to}>
+            <Link to={to} className={path === to || (to !== '/' && path.startsWith(to)) ? 'active' : ''}>
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div className="header-right">
+        <button className="btn btn-sm btn-primary" onClick={() => navigate('/consultation')}>技术咨询</button>
+        <button className="hamburger" onClick={() => setMobileOpen(!mobileOpen)}>
+          {mobileOpen ? '✕' : '☰'}
+        </button>
+      </div>
+      <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`}>
+        {navItems.map(([to, label]) => (
+          <Link key={to} to={to} onClick={() => setMobileOpen(false)}>{label}</Link>
+        ))}
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  const { navigate } = useRouter();
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <div className="logo-icon" style={{ width: 36, height: 36, fontSize: 14 }}>LW</div>
+              <span style={{ fontWeight: 700, fontSize: 16 }}>激光焊接专家数据库</span>
+            </div>
+            <p>连接激光焊接专家、工艺知识、材料数据、设备参数与行业案例的一站式技术平台。为制造企业提供专家匹配、工艺参考、缺陷分析、案例查询和技术资料支持。</p>
+            <div style={{ marginTop: 16 }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>服务热线：400-XXX-XXXX</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>邮箱：service@laser-welding-db.com</p>
+            </div>
+          </div>
+          <div>
+            <h4>核心功能</h4>
+            <a onClick={() => navigate('/experts')}>专家库</a>
+            <a onClick={() => navigate('/articles')}>工艺知识库</a>
+            <a onClick={() => navigate('/materials')}>材料数据库</a>
+            <a onClick={() => navigate('/equipment')}>设备与参数</a>
+            <a onClick={() => navigate('/defects')}>缺陷分析库</a>
+            <a onClick={() => navigate('/cases')}>行业案例</a>
+          </div>
+          <div>
+            <h4>平台服务</h4>
+            <a onClick={() => navigate('/downloads')}>资料下载</a>
+            <a onClick={() => navigate('/membership')}>会员服务</a>
+            <a onClick={() => navigate('/consultation')}>技术咨询</a>
+            <a onClick={() => navigate('/expert-apply')}>专家入驻</a>
+            <a onClick={() => navigate('/about')}>关于我们</a>
+          </div>
+          <div>
+            <h4>行业覆盖</h4>
+            <a onClick={() => navigate('/cases')}>新能源汽车</a>
+            <a onClick={() => navigate('/cases')}>动力电池</a>
+            <a onClick={() => navigate('/cases')}>航空航天</a>
+            <a onClick={() => navigate('/cases')}>汽车零部件</a>
+            <a onClick={() => navigate('/cases')}>医疗器械</a>
+          </div>
+          <div>
+            <h4>法律信息</h4>
+            <a>隐私政策</a>
+            <a>用户协议</a>
+            <a>免责声明</a>
+            <div style={{ marginTop: 16 }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>微信公众号</p>
+              <div style={{ width: 80, height: 80, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 8, fontSize: '0.7rem', color: 'var(--text-muted)' }}>二维码占位</div>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© 2025 激光焊接专家数据库 Laser Welding Expert Database. All Rights Reserved.</p>
+          <p style={{ marginTop: 8, fontSize: '0.75rem' }}>开发者：威维 | ljw1335647838@outlook.com</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function SafetyBanner() {
+  return (
+    <div className="safety-notice">
+      ⚠️ 安全提示：本站内容仅用于技术交流和工程参考，具体工艺参数需结合实际设备、材料、夹具、检测标准和安全规范进行验证。
+      激光加工存在高能量、高温、强光辐射、烟尘和电气风险，请由专业人员在合规安全条件下操作。
+    </div>
+  );
+}
+
+// ========== PAGE COMPONENTS ==========
+
+function HomePage() {
+  const { navigate } = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = () => {
+    if (searchTerm.trim()) navigate('/search?q=' + encodeURIComponent(searchTerm.trim()));
+  };
+  const hotTags = ['304不锈钢','6061铝合金','气孔','飞溅','裂纹','电池壳体','铜铝焊接','手持激光焊','蓝光激光器'];
+  return (
+    <div className="page">
+      <div className="hero">
+        <div className="hero-content">
+          <div className="hero-badge">🔬 专业激光焊接技术数据库平台</div>
+          <h1>激光焊接专家数据库</h1>
+          <p className="hero-slogan">连接激光焊接专家、工艺知识、材料数据、设备参数与行业案例的一站式技术平台。</p>
+          <p className="hero-sub">为制造企业提供专家匹配、工艺参考、缺陷分析、案例查询和技术资料支持。</p>
+          <div className="hero-actions">
+            <button className="btn btn-primary btn-lg" onClick={() => document.querySelector('.hero-search input').focus()}>🔍 立即搜索数据库</button>
+            <button className="btn btn-secondary btn-lg" onClick={() => navigate('/experts')}>👨‍🔬 查找焊接专家</button>
+            <button className="btn btn-orange btn-lg" onClick={() => navigate('/consultation')}>📝 提交技术咨询</button>
+          </div>
+          <div className="hero-search">
+            <div className="search-box">
+              <input placeholder="输入关键词搜索：材料、工艺、缺陷、设备…" value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSearch()} />
+              <button onClick={handleSearch}>搜索</button>
+            </div>
+            <div className="search-tags">
+              {hotTags.map(tag => (
+                <span key={tag} className="search-tag" onClick={() => navigate('/search?q=' + encodeURIComponent(tag))}>{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section className="container section">
+        <div className="stats-grid">
+          {[
+            ['128', '位专家'], ['360', '篇工艺知识'], ['86', '种材料数据'],
+            ['240', '个行业案例'], ['520', '条参数记录'], ['75', '份技术资料']
+          ].map(([num, label]) => (
+            <div key={label} className="stat-card">
+              <div className="stat-number">{num}</div>
+              <div className="stat-label">{label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="container section">
+        <div className="section-header">
+          <h2 className="section-title">⭐ 推荐专家</h2>
+          <p className="section-subtitle">平台精选焊接领域资深专家</p>
+        </div>
+        <div className="cards-grid">
+          {EXPERTS.slice(0, 4).map(exp => (
+            <div key={exp.id} className="card" onClick={() => navigate('/experts/' + exp.id)}>
+              <div className="card-header">
+                <div className="card-avatar">{exp.avatar}</div>
+                <div className="card-info">
+                  <div className="card-name">{exp.name}</div>
+                  <div className="card-role">{exp.title}</div>
+                  <div className="card-org">{exp.org}</div>
+                </div>
+              </div>
+              <div className="card-tags">
+                <span className="tag">{exp.direction}</span>
+                {exp.materials.slice(0, 2).map(m => <span key={m} className="tag-green tag">{m}</span>)}
+              </div>
+              <div className="card-meta">
+                <span>⭐ {exp.rating}</span>
+                <span>📅 {exp.experience}年经验</span>
+                <span>📍{exp.region}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <button className="btn btn-outline" onClick={() => navigate('/experts')}>查看全部专家 →</button>
+        </div>
+      </section>
+
+      <section className="container section">
+        <div className="section-header">
+          <h2 className="section-title">🔥 热门工艺文章</h2>
+          <p className="section-subtitle">最新最热的激光焊接工艺技术文章</p>
+        </div>
+        <div className="cards-grid">
+          {ARTICLES.slice(0, 6).map(art => (
+            <div key={art.id} className="card" onClick={() => navigate('/articles/' + art.id)}>
+              <div className="card-tags" style={{ marginBottom: 12 }}>
+                <span className="tag tag-purple">{art.category}</span>
+                <span className="tag">{art.difficulty}</span>
+              </div>
+              <h3 style={{ fontSize: '1rem', marginBottom: 8 }}>{art.title}</h3>
+              <div className="card-tags">
+                {art.materials.map(m => <span key={m} className="tag-green tag">{m}</span>)}
+                <span className="tag-cyan tag">{art.thickness}</span>
+              </div>
+              <div className="card-meta">
+                <span>👁 {art.views}</span>
+                <span>📅 {art.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <button className="btn btn-outline" onClick={() => navigate('/articles')}>查看全部文章 →</button>
+        </div>
+      </section>
+
+      <section className="container section" style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: '3rem', border: '1px solid var(--border)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
+          <div>
+            <h2 className="section-title" style={{ marginBottom: '1rem' }}>需要解决具体焊接难题？</h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.8 }}>
+              提交材料、厚度、设备和缺陷信息，平台将匹配合适专家为您解答。企业可申请建立专属焊接工艺数据库。
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button className="btn btn-orange btn-lg" onClick={() => navigate('/consultation')}>📝 提交技术咨询</button>
+              <button className="btn btn-outline btn-lg" onClick={() => navigate('/expert-apply')}>👨‍🔬 申请专家入驻</button>
+            </div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '5rem', opacity: 0.3 }}>🏭</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container section">
+        <div className="section-header">
+          <h2 className="section-title">🏗 行业解决方案</h2>
+          <p className="section-subtitle">覆盖多个关键制造行业的焊接方案</p>
+        </div>
+        <div className="cards-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
+          {['新能源汽车','动力电池','汽车零部件','航空航天','轨道交通','医疗器械','电子制造','家电制造'].map(ind => (
+            <div key={ind} className="card" style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate('/cases')}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                {ind === '新能源汽车' ? '🚗' : ind === '动力电池' ? '🔋' : ind === '航空航天' ? '✈️' :
+                 ind === '医疗器械' ? '🏥' : ind === '电子制造' ? '📱' : ind === '轨道交通' ? '🚄' : '🏭'}
+              </div>
+              <div style={{ fontWeight: 600 }}>{ind}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="container"><SafetyBanner /></div>
+    </div>
+  );
+}
+
+function ExpertListPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const [direction, setDirection] = useState('');
+  const [region, setRegion] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [favIds, setFavIds] = useLocalStorage('fav_experts', []);
+
+  const filtered = useMemo(() => {
+    return EXPERTS.filter(e => {
+      if (search && !e.name.includes(search) && !e.direction.includes(search) && !e.materials.some(m => m.includes(search))) return false;
+      if (direction && e.direction !== direction) return false;
+      if (region && e.region !== region) return false;
+      if (industry && !e.industries.includes(industry)) return false;
+      return true;
+    });
+  }, [search, direction, region, industry]);
+
+  const toggleFav = (id, e) => {
+    e.stopPropagation();
+    setFavIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div className="container">
+          <h1>专家库</h1>
+          <p>搜索并联系激光焊接领域资深专家</p>
+        </div>
+      </div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="page-with-sidebar">
+          <div className="sidebar">
+            <h3>筛选条件</h3>
+            <div className="filter-group">
+              <label>关键词搜索</label>
+              <input placeholder="姓名/方向/材料" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            <div className="filter-group">
+              <label>专业方向</label>
+              <select value={direction} onChange={e => setDirection(e.target.value)}>
+                <option value="">全部</option>
+                {[...new Set(EXPERTS.map(e => e.direction))].map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>所在地区</label>
+              <select value={region} onChange={e => setRegion(e.target.value)}>
+                <option value="">全部</option>
+                {[...new Set(EXPERTS.map(e => e.region))].map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>行业领域</label>
+              <select value={industry} onChange={e => setIndustry(e.target.value)}>
+                <option value="">全部</option>
+                {[...new Set(EXPERTS.flatMap(e => e.industries))].map(i => <option key={i} value={i}>{i}</option>)}
+              </select>
+            </div>
+            <button className="btn btn-sm btn-secondary" style={{ width: '100%' }}
+              onClick={() => { setSearch(''); setDirection(''); setRegion(''); setIndustry(''); }}>
+              重置筛选
+            </button>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共找到 {filtered.length} 位专家</p>
+            <div className="cards-grid">
+              {filtered.map(exp => (
+                <div key={exp.id} className="card" onClick={() => navigate('/experts/' + exp.id)}>
+                  <div className="card-header">
+                    <div className="card-avatar">{exp.avatar}</div>
+                    <div className="card-info">
+                      <div className="card-name">{exp.name}</div>
+                      <div className="card-role">{exp.title}</div>
+                      <div className="card-org">{exp.org}</div>
+                    </div>
+                  </div>
+                  <div className="card-tags">
+                    <span className="tag">{exp.direction}</span>
+                    {exp.materials.slice(0, 3).map(m => <span key={m} className="tag-green tag">{m}</span>)}
+                  </div>
+                  <div className="card-meta">
+                    <span>⭐ {exp.rating}</span>
+                    <span>📅 {exp.experience}年</span>
+                    <span>📍{exp.region}</span>
+                    {exp.remote && <span className="tag tag-cyan">可远程</span>}
+                  </div>
+                  <div className="card-actions">
+                    <button className="btn btn-sm btn-primary" onClick={(e) => { e.stopPropagation(); navigate('/experts/' + exp.id); }}>查看详情</button>
+                    <button className="btn btn-sm btn-outline" onClick={(e) => { e.stopPropagation(); navigate('/consultation'); }}>联系专家</button>
+                    <button className={`btn btn-sm ${favIds.includes(exp.id) ? 'btn-success' : 'btn-ghost'}`}
+                      onClick={(e) => toggleFav(exp.id, e)}>
+                      {favIds.includes(exp.id) ? '❤️ 已收藏' : '🤍 收藏'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {filtered.length === 0 && <div className="empty-state"><div className="icon">🔍</div><h3>未找到匹配专家</h3><p>请调整筛选条件</p></div>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExpertDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const exp = EXPERTS.find(e => e.id === parseInt(id));
+  if (!exp) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>专家不存在</h3></div></div></div>;
+  const relatedArticles = ARTICLES.filter(a => a.materials.some(m => exp.materials.includes(m))).slice(0, 3);
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/experts')}>← 返回专家库</span>
+        <div className="detail-header">
+          <div className="detail-avatar">{exp.avatar}</div>
+          <div className="detail-info">
+            <div className="detail-name">{exp.name}</div>
+            <div style={{ color: 'var(--text-secondary)', marginBottom: 12 }}>{exp.title} · {exp.org}</div>
+            <div className="card-tags">
+              <span className="tag">{exp.direction}</span>
+              {exp.materials.map(m => <span key={m} className="tag-green tag">{m}</span>)}
+              {exp.industries.map(i => <span key={i} className="tag-orange tag">{i}</span>)}
+            </div>
+            <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
+              <button className="btn btn-primary" onClick={() => navigate('/consultation')}>联系专家</button>
+              <button className="btn btn-outline" onClick={() => navigate('/experts')}>返回列表</button>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+          <div>
+            <div className="detail-section">
+              <h3>📋 基本信息</h3>
+              <div className="detail-grid">
+                <div className="detail-field"><label>专业方向</label><span>{exp.direction}</span></div>
+                <div className="detail-field"><label>所在地区</label><span>{exp.region}</span></div>
+                <div className="detail-field"><label>经验年限</label><span>{exp.experience}年</span></div>
+                <div className="detail-field"><label>评分</label><span>⭐ {exp.rating}</span></div>
+                <div className="detail-field"><label>可远程咨询</label><span>{exp.remote ? '✅ 是' : '❌ 否'}</span></div>
+                <div className="detail-field"><label>可现场服务</label><span>{exp.onsite ? '✅ 是' : '❌ 否'}</span></div>
+                <div className="detail-field"><label>咨询价格</label><span>{exp.price}</span></div>
+                <div className="detail-field"><label>论文/专利</label><span>{exp.papers}篇论文 / {exp.patents}项专利</span></div>
+              </div>
+            </div>
+            <div className="detail-section">
+              <h3>📝 专家简介</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{exp.bio}</p>
+            </div>
+            <div className="detail-section">
+              <h3>🏭 擅长设备</h3>
+              <div className="card-tags">{exp.devices.map(d => <span key={d} className="tag tag-purple">{d}</span>)}</div>
+            </div>
+            <div className="detail-section">
+              <h3>🏆 典型案例</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{exp.cases}</p>
+            </div>
+          </div>
+          <div>
+            <div className="detail-section">
+              <h3>📄 相关文章</h3>
+              {relatedArticles.map(a => (
+                <div key={a.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }} onClick={() => navigate('/articles/' + a.id)}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: 4 }}>{a.title}</div>
+                  <div className="card-tags"><span className="tag tag-purple">{a.category}</span></div>
+                </div>
+              ))}
+              {relatedArticles.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>暂无相关文章</p>}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container"><SafetyBanner /></div>
+    </div>
+  );
+}
+
+function ArticlesPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const [cat, setCat] = useState('');
+  const [diff, setDiff] = useState('');
+  const [mat, setMat] = useState('');
+  const filtered = useMemo(() => ARTICLES.filter(a => {
+    if (search && !a.title.includes(search) && !a.tags.some(t => t.includes(search))) return false;
+    if (cat && a.category !== cat) return false;
+    if (diff && a.difficulty !== diff) return false;
+    if (mat && !a.materials.some(m => m.includes(mat))) return false;
+    return true;
+  }), [search, cat, diff, mat]);
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>工艺知识库</h1><p>专业的激光焊接工艺技术文章和参考方案</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="page-with-sidebar">
+          <div className="sidebar">
+            <h3>筛选</h3>
+            <div className="filter-group"><label>搜索</label><input placeholder="关键词" value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="filter-group"><label>分类</label><select value={cat} onChange={e => setCat(e.target.value)}><option value="">全部</option>{[...new Set(ARTICLES.map(a=>a.category))].map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <div className="filter-group"><label>难度</label><select value={diff} onChange={e => setDiff(e.target.value)}><option value="">全部</option>{['初级','中级','高级','专家级'].map(d=><option key={d} value={d}>{d}</option>)}</select></div>
+            <div className="filter-group"><label>材料</label><input placeholder="材料名称" value={mat} onChange={e => setMat(e.target.value)} /></div>
+            <button className="btn btn-sm btn-secondary" style={{ width: '100%' }} onClick={() => { setSearch(''); setCat(''); setDiff(''); setMat(''); }}>重置</button>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共 {filtered.length} 篇文章</p>
+            <div className="cards-grid">
+              {filtered.map(a => (
+                <div key={a.id} className="card" onClick={() => navigate('/articles/' + a.id)}>
+                  <div className="card-tags"><span className="tag tag-purple">{a.category}</span><span className="tag">{a.difficulty}</span></div>
+                  <h3 style={{ fontSize: '1rem', margin: '8px 0' }}>{a.title}</h3>
+                  <div className="card-tags">{a.materials.map(m => <span key={m} className="tag-green tag">{m}</span>)}<span className="tag-cyan tag">{a.thickness}</span><span className="tag-orange tag">{a.industry}</span></div>
+                  <div className="card-meta"><span>👁 {a.views}</span><span>{a.date}</span></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ArticleDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const art = ARTICLES.find(a => a.id === parseInt(id));
+  if (!art) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>文章不存在</h3></div></div></div>;
+  const c = art.content;
+  const relatedExperts = EXPERTS.filter(e => e.materials.some(m => art.materials.includes(m))).slice(0, 3);
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/articles')}>← 返回工艺知识库</span>
+        <div className="card-tags" style={{ marginBottom: 16 }}>
+          <span className="tag tag-purple">{art.category}</span><span className="tag">{art.difficulty}</span>
+          {art.materials.map(m => <span key={m} className="tag-green tag">{m}</span>)}
+        </div>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: 8 }}>{art.title}</h1>
+        <div className="card-meta" style={{ marginBottom: '2rem' }}><span>👁 {art.views} 阅读</span><span>📅 {art.date}</span><span>📏 {art.thickness}</span></div>
+        {[
+          ['📋 适用场景', c.scenario], ['🔬 工艺原理', c.principle], ['⚙️ 推荐设备', c.equipment],
+          ['📊 参数参考范围', c.params], ['⚠️ 常见问题', c.issues], ['💡 解决方案', c.solution], ['🔍 检测方法', c.testing]
+        ].map(([title, content]) => (
+          <div key={title} className="detail-section"><h3>{title}</h3><p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{content}</p></div>
+        ))}
+        <SafetyBanner />
+        <div className="detail-section">
+          <h3>👨‍🔬 相关专家</h3>
+          <div className="cards-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' }}>
+            {relatedExperts.map(e => (
+              <div key={e.id} className="card" onClick={() => navigate('/experts/' + e.id)} style={{ padding: '1rem' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <div className="card-avatar" style={{ width: 40, height: 40, fontSize: '1.2rem', borderRadius: 10 }}>{e.avatar}</div>
+                  <div><div style={{ fontWeight: 600 }}>{e.name}</div><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{e.direction}</div></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MaterialsPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const [cat, setCat] = useState('');
+  const filtered = useMemo(() => MATERIALS.filter(m => {
+    if (search && !m.name.includes(search) && !m.grades.includes(search)) return false;
+    if (cat && m.category !== cat) return false;
+    return true;
+  }), [search, cat]);
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>材料数据库</h1><p>激光焊接材料特性、工艺参数与缺陷分析</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="page-with-sidebar">
+          <div className="sidebar">
+            <h3>筛选</h3>
+            <div className="filter-group"><label>搜索</label><input placeholder="材料名称/牌号" value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="filter-group"><label>类别</label><select value={cat} onChange={e => setCat(e.target.value)}><option value="">全部</option>{[...new Set(MATERIALS.map(m=>m.category))].map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <button className="btn btn-sm btn-secondary" style={{width:'100%'}} onClick={() => { setSearch(''); setCat(''); }}>重置</button>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共 {filtered.length} 种材料</p>
+            <div className="cards-grid">
+              {filtered.map(m => (
+                <div key={m.id} className="card" onClick={() => navigate('/materials/' + m.id)}>
+                  <div className="card-tags"><span className="tag tag-orange">{m.category}</span><span className={`tag ${m.difficulty === '很高' || m.difficulty === '极高' ? 'tag-red' : 'tag-green'}`}>难度：{m.difficulty}</span></div>
+                  <h3 style={{ fontSize: '1.1rem', margin: '8px 0' }}>{m.name}</h3>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 8 }}>牌号：{m.grades}</div>
+                  <div className="card-tags">
+                    <span className="tag">{m.laser}</span>
+                    {m.defects.slice(0, 2).map(d => <span key={d} className="tag-red tag">{d}</span>)}
+                  </div>
+                  <div className="card-tags" style={{ marginTop: 8 }}>
+                    {m.industries.map(i => <span key={i} className="tag-cyan tag">{i}</span>)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MaterialDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const mat = MATERIALS.find(m => m.id === parseInt(id));
+  if (!mat) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>材料不存在</h3></div></div></div>;
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/materials')}>← 返回材料数据库</span>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: 8 }}>{mat.name}</h1>
+        <div className="card-tags" style={{ marginBottom: 24 }}><span className="tag tag-orange">{mat.category}</span><span className={`tag ${mat.difficulty==='很高'||mat.difficulty==='极高'?'tag-red':'tag-green'}`}>难度：{mat.difficulty}</span></div>
+        {[
+          ['🏷 典型牌号', mat.grades],
+          ['📊 材料特性', mat.characteristics],
+          ['🔴 激光吸收特性', mat.absorption],
+          ['⚠️ 焊接难点', mat.weldingPoints],
+          ['🔧 推荐激光类型', mat.laser],
+          ['💨 推荐保护气体', mat.gas],
+          ['📊 推荐参数参考', mat.params],
+          ['⚠️ 常见焊接缺陷', mat.defects.join('、')],
+          ['🏭 适用行业', mat.industries.join('、')]
+        ].map(([title, content]) => (
+          <div key={title} className="detail-section"><h3>{title}</h3><p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{content}</p></div>
+        ))}
+        <SafetyBanner />
+      </div>
+    </div>
+  );
+}
+
+function EquipmentPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const [matFilter, setMatFilter] = useState('');
+  const [compareList, setCompareList] = useLocalStorage('compare_list', []);
+  const filtered = useMemo(() => EQUIPMENT_PARAMS.filter(e => {
+    if (search && !e.material.includes(search) && !e.scene.includes(search)) return false;
+    if (matFilter && !e.material.includes(matFilter)) return false;
+    return true;
+  }), [search, matFilter]);
+  const toggleCompare = (item) => {
+    setCompareList(prev => {
+      const exists = prev.find(x => x.id === item.id);
+      if (exists) return prev.filter(x => x.id !== item.id);
+      if (prev.length >= 3) return prev;
+      return [...prev, item];
+    });
+  };
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>设备与参数</h1><p>激光焊接工艺参数查询与对比工具</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="page-with-sidebar">
+          <div className="sidebar">
+            <h3>筛选</h3>
+            <div className="filter-group"><label>搜索</label><input placeholder="材料/场景" value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="filter-group"><label>材料</label><select value={matFilter} onChange={e => setMatFilter(e.target.value)}><option value="">全部</option>{[...new Set(EQUIPMENT_PARAMS.map(e=>e.material))].map(m=><option key={m} value={m}>{m}</option>)}</select></div>
+            <button className="btn btn-sm btn-secondary" style={{width:'100%'}} onClick={() => { setSearch(''); setMatFilter(''); }}>重置</button>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共 {filtered.length} 条参数记录</p>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="data-table">
+                <thead><tr><th>材料</th><th>厚度</th><th>焊接方式</th><th>激光功率</th><th>焊接速度</th><th>应用场景</th><th>操作</th></tr></thead>
+                <tbody>
+                  {filtered.map(e => (
+                    <tr key={e.id}>
+                      <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{e.material}</td>
+                      <td>{e.thickness}</td><td>{e.method}</td><td>{e.laserPower}</td><td>{e.speed}</td>
+                      <td><span className="tag tag-cyan">{e.scene}</span></td>
+                      <td>
+                        <div style={{ display: 'flex', gap: 4 }}>
+                          <button className="btn btn-sm btn-primary" onClick={() => navigate('/equipment/' + e.id)}>详情</button>
+                          <button className={`btn btn-sm ${compareList.find(x=>x.id===e.id) ? 'btn-success' : 'btn-secondary'}`}
+                            onClick={() => toggleCompare(e)}>
+                            {compareList.find(x=>x.id===e.id) ? '已选' : '对比'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      {compareList.length > 0 && (
+        <div className="compare-bar">
+          <div className="compare-items">
+            <span style={{ color: 'var(--text-secondary)', marginRight: 8 }}>对比栏({compareList.length}/3)：</span>
+            {compareList.map(item => (
+              <div key={item.id} className="compare-item">
+                <span>{item.material} {item.thickness}</span>
+                <button onClick={() => setCompareList(prev => prev.filter(x => x.id !== item.id))}>×</button>
+              </div>
+            ))}
+          </div>
+          <button className="btn btn-sm btn-danger" onClick={() => setCompareList([])}>清空对比</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EquipmentDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const eq = EQUIPMENT_PARAMS.find(e => e.id === parseInt(id));
+  if (!eq) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>参数记录不存在</h3></div></div></div>;
+  const toast = useToast();
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/equipment')}>← 返回设备与参数</span>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 900, marginBottom: 24 }}>{eq.material} · {eq.thickness} · {eq.method}</h1>
+        <div className="detail-section">
+          <h3>⚙️ 焊接工艺参数</h3>
+          <div className="detail-grid">
+            {[
+              ['材料', eq.material], ['厚度', eq.thickness], ['焊接方式', eq.method],
+              ['激光功率', eq.laserPower], ['焊接速度', eq.speed], ['离焦量', eq.defocus],
+              ['光斑直径', eq.spot], ['保护气体', eq.gas], ['气体流量', eq.gasFlow],
+              ['摆动频率', eq.oscFreq], ['摆动幅度', eq.oscAmp], ['送丝速度', eq.wireSpeed],
+              ['接头形式', eq.joint], ['应用场景', eq.scene], ['设备类型', eq.device]
+            ].map(([k, v]) => (
+              <div key={k} className="detail-field"><label>{k}</label><span>{v}</span></div>
+            ))}
+          </div>
+        </div>
+        <SafetyBanner />
+        <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+          <button className="btn btn-primary" onClick={() => navigate('/equipment')}>返回列表</button>
+          <button className="btn btn-secondary" onClick={() => toast('参数卡已生成，实际项目请进行工艺验证。', 'info')}>📥 下载参数卡</button>
+          <button className="btn btn-orange" onClick={() => navigate('/consultation')}>📝 咨询此工艺</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefectsPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const filtered = useMemo(() => DEFECTS.filter(d => {
+    if (search && !d.name.includes(search) && !d.materials.some(m => m.includes(search))) return false;
+    return true;
+  }), [search]);
+  const riskColor = (r) => r === '高' ? 'tag-red' : r.includes('中') ? 'tag-orange' : 'tag-green';
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>缺陷分析库</h1><p>激光焊接常见缺陷的原因分析、排查步骤和改善措施</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: 12 }}>
+          <input className="form-input" style={{ maxWidth: 400 }} placeholder="搜索缺陷名称或材料…" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共 {filtered.length} 种缺陷</p>
+        <div className="cards-grid">
+          {filtered.map(d => (
+            <div key={d.id} className="card" onClick={() => navigate('/defects/' + d.id)}>
+              <div className="card-tags">
+                <span className={`tag ${riskColor(d.risk)}`}>风险：{d.risk}</span>
+                {d.materials.slice(0, 3).map(m => <span key={m} className="tag-green tag">{m}</span>)}
+              </div>
+              <h3 style={{ fontSize: '1.2rem', margin: '8px 0' }}>{d.name}</h3>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 8 }}>
+                常见原因：{d.causes.join('、')}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--accent-blue)' }}>💡 {d.direction}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DefectDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const def = DEFECTS.find(d => d.id === parseInt(id));
+  if (!def) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>缺陷不存在</h3></div></div></div>;
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/defects')}>← 返回缺陷分析库</span>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: 8 }}>{def.name}</h1>
+        <div className="card-tags" style={{ marginBottom: 24 }}>
+          <span className={`tag ${def.risk==='高'?'tag-red':'tag-orange'}`}>风险等级：{def.risk}</span>
+          {def.materials.map(m => <span key={m} className="tag-green tag">{m}</span>)}
+        </div>
+        {[
+          ['📋 缺陷定义', def.definition],
+          ['🔍 典型表现', def.symptoms],
+          ['⚠️ 可能原因', def.causes.join('、')],
+          ['🔎 排查步骤', def.steps.map((s,i) => `${i+1}. ${s}`).join('\n')],
+          ['💡 改善措施', def.measures.map((m,i) => `${i+1}. ${m}`).join('\n')],
+          ['⚙️ 相关参数', def.relatedParams]
+        ].map(([title, content]) => (
+          <div key={title} className="detail-section"><h3>{title}</h3><p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>{content}</p></div>
+        ))}
+        <SafetyBanner />
+        <div style={{ marginTop: 16 }}>
+          <button className="btn btn-primary" onClick={() => navigate('/defects')}>返回列表</button>
+          <button className="btn btn-orange" style={{ marginLeft: 12 }} onClick={() => navigate('/consultation')}>📝 咨询此问题</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CasesPage() {
+  const { navigate } = useRouter();
+  const [search, setSearch] = useState('');
+  const [ind, setInd] = useState('');
+  const filtered = useMemo(() => CASES.filter(c => {
+    if (search && !c.title.includes(search) && !c.material.includes(search)) return false;
+    if (ind && c.industry !== ind) return false;
+    return true;
+  }), [search, ind]);
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>行业案例</h1><p>真实的激光焊接项目案例与解决方案</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div style={{ display: 'flex', gap: 12, marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          <input className="form-input" style={{ maxWidth: 300 }} placeholder="搜索案例…" value={search} onChange={e => setSearch(e.target.value)} />
+          <select className="form-input" style={{ maxWidth: 200 }} value={ind} onChange={e => setInd(e.target.value)}>
+            <option value="">全部行业</option>
+            {[...new Set(CASES.map(c=>c.industry))].map(i => <option key={i} value={i}>{i}</option>)}
+          </select>
+        </div>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>共 {filtered.length} 个案例</p>
+        <div className="cards-grid">
+          {filtered.map(c => (
+            <div key={c.id} className="card" onClick={() => navigate('/cases/' + c.id)}>
+              <div className="card-tags">
+                <span className="tag tag-orange">{c.industry}</span>
+                <span className="tag">{c.process}</span>
+                <span className="tag-green tag">{c.material}</span>
+              </div>
+              <h3 style={{ fontSize: '1rem', margin: '8px 0' }}>{c.title}</h3>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 4 }}>❌ {c.problem}</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--accent-green)' }}>✅ {c.result}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CaseDetailPage({ id }) {
+  const { navigate } = useRouter();
+  const c = CASES.find(x => x.id === parseInt(id));
+  if (!c) return <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="empty-state"><h3>案例不存在</h3></div></div></div>;
+  return (
+    <div className="page">
+      <div className="container detail-page">
+        <span className="back-link" onClick={() => navigate('/cases')}>← 返回行业案例</span>
+        <div className="card-tags" style={{ marginBottom: 16 }}>
+          <span className="tag tag-orange">{c.industry}</span><span className="tag">{c.process}</span><span className="tag-green tag">{c.material}</span><span className="tag-purple tag">{c.device}</span>
+        </div>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 900, marginBottom: 24 }}>{c.title}</h1>
+        {[
+          ['📋 项目背景', c.background],
+          ['❌ 客户痛点', c.problem],
+          ['🔧 工艺方案', c.solution],
+          ['✅ 改善结果', c.result],
+          ['📝 项目详情', c.detail]
+        ].map(([title, content]) => (
+          <div key={title} className="detail-section"><h3>{title}</h3><p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>{content}</p></div>
+        ))}
+        <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+          <button className="btn btn-primary" onClick={() => navigate('/cases')}>返回列表</button>
+          <button className="btn btn-orange" onClick={() => navigate('/consultation')}>📝 咨询类似方案</button>
+        </div>
+      </div>
+      <div className="container"><SafetyBanner /></div>
+    </div>
+  );
+}
+
+function DownloadsPage() {
+  const toast = useToast();
+  const { navigate } = useRouter();
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>资料下载</h1><p>激光焊接技术手册、指南、模板和白皮书</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="cards-grid">
+          {DOWNLOADS.map(d => (
+            <div key={d.id} className="card">
+              <div className="card-tags">
+                <span className="tag tag-purple">{d.type}</span>
+                <span className={`tag ${d.level === 'free' ? 'tag-green' : 'tag-orange'}`}>{d.level === 'free' ? '免费' : '会员'}</span>
+              </div>
+              <h3 style={{ fontSize: '1rem', margin: '8px 0' }}>{d.name}</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 8 }}>{d.desc}</p>
+              <div className="card-meta"><span>📦 {d.size}</span><span>⬇ {d.downloads}次</span></div>
+              <div style={{ marginTop: 12 }}>
+                {d.level === 'free' ? (
+                  <button className="btn btn-sm btn-primary" onClick={() => toast(`"${d.name}" 下载链接已生成！(演示模式)`, 'success')}>📥 免费下载</button>
+                ) : (
+                  <button className="btn btn-sm btn-orange" onClick={() => { toast('请开通会员后下载', 'info'); navigate('/membership'); }}>🔒 会员下载</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MembershipPage() {
+  const toast = useToast();
+  const { navigate } = useRouter();
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>会员服务</h1><p>选择适合您的会员方案，解锁全部专业资源</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="membership-grid">
+          {[
+            { name: '免费用户', price: '免费', features: [['查看基础资料', true], ['查看完整参数库', false], ['下载资料(每月3份)', true], ['联系专家', false], ['提交技术咨询', true], ['企业案例诊断', false], ['专属顾问服务', false]] },
+            { name: '专业会员', price: '¥299/月 起', featured: true, features: [['查看基础资料', true], ['查看完整参数库', true], ['下载资料(无限)', true], ['联系专家', true], ['提交技术咨询(10次/月)', true], ['企业案例诊断', false], ['专属顾问服务', false]] },
+            { name: '企业会员', price: '¥1999/月 起', features: [['查看基础资料', true], ['查看完整参数库', true], ['下载资料(无限)', true], ['联系专家(无限)', true], ['提交技术咨询(无限)', true], ['企业案例诊断(3次/月)', true], ['专属顾问服务', true]] },
+            { name: '专家会员', price: '联系平台入驻', features: [['专家入驻展示', true], ['获取咨询订单', true], ['平台技术支持', true], ['行业资源共享', true], ['收益分成模式', true], ['品牌曝光推荐', true], ['专属运营服务', true]] }
+          ].map(plan => (
+            <div key={plan.name} className={`membership-card ${plan.featured ? 'featured' : ''}`}>
+              <h3>{plan.name}</h3>
+              <div className="membership-price">{plan.price}</div>
+              <ul className="membership-features">
+                {plan.features.map(([f, enabled]) => (
+                  <li key={f} className={enabled ? '' : 'disabled'}>{f}</li>
+                ))}
+              </ul>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => toast('申请已记录，顾问将尽快联系您！', 'success')}>
+                  {plan.name === '专家会员' ? '申请专家入驻' : '立即开通'}
+                </button>
+                <button className="btn btn-secondary" style={{ width: '100%' }} onClick={() => navigate('/consultation')}>联系顾问</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConsultationPage() {
+  const toast = useToast();
+  const [form, setForm] = useState({ name: '', company: '', phone: '', email: '', industry: '', material: '', problem: '', needExpert: false });
+  const [submitted, setSubmitted] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name || !form.problem) { toast('请填写姓名和问题描述', 'error'); return; }
+    setSubmitted(true);
+    toast('咨询提交成功！', 'success');
+  };
+  if (submitted) return (
+    <div className="page">
+      <div className="container" style={{ paddingTop: '4rem' }}>
+        <div className="detail-section" style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '3rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+          <h2>咨询提交成功！</h2>
+          <p style={{ color: 'var(--text-secondary)', marginTop: 12, lineHeight: 1.8 }}>
+            您的咨询已提交，平台技术顾问将尽快与您联系。<br/>如有紧急需求，请拨打服务热线：400-XXX-XXXX
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>技术咨询</h1><p>提交您的焊接技术问题，平台将匹配合适专家为您解答</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem', maxWidth: 700 }}>
+        <form onSubmit={handleSubmit}>
+          {[
+            { label: '姓名', key: 'name', required: true },
+            { label: '公司名称', key: 'company' },
+            { label: '手机号', key: 'phone' },
+            { label: '邮箱', key: 'email' }
+          ].map(f => (
+            <div className="form-group" key={f.key}>
+              <label>{f.label} {f.required && <span className="required">*</span>}</label>
+              <input className="form-input" value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})} />
+            </div>
+          ))}
+          <div className="form-row">
+            <div className="form-group">
+              <label>所在行业</label>
+              <select className="form-input" value={form.industry} onChange={e => setForm({...form, industry: e.target.value})}>
+                <option value="">请选择</option>
+                {['新能源汽车','动力电池','汽车零部件','航空航天','电子制造','医疗器械','家电制造','精密五金','其他'].map(i => <option key={i} value={i}>{i}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>材料类型</label>
+              <input className="form-input" placeholder="如：304不锈钢、6061铝合金" value={form.material} onChange={e => setForm({...form, material: e.target.value})} />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>焊接问题描述 <span className="required">*</span></label>
+            <textarea className="form-input" placeholder="请详细描述您的焊接问题，包括材料、厚度、设备、缺陷现象等…" value={form.problem} onChange={e => setForm({...form, problem: e.target.value})} />
+          </div>
+          <div className="form-group">
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+              <input type="checkbox" checked={form.needExpert} onChange={e => setForm({...form, needExpert: e.target.checked})} />
+              是否需要专家服务
+            </label>
+          </div>
+          <div className="form-group">
+            <label>上传图片/文件</label>
+            <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius)', padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+              点击或拖拽上传图片、PDF等文件 (演示模式)
+            </div>
+          </div>
+          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>提交咨询</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function ExpertApplyPage() {
+  const toast = useToast();
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: '', org: '', title: '', region: '', direction: '', materials: '', industries: '', experience: '', services: '', contact: '' });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name || !form.org) { toast('请填写必填项', 'error'); return; }
+    setSubmitted(true);
+    toast('专家资料已提交！', 'success');
+  };
+  if (submitted) return (
+    <div className="page"><div className="container" style={{paddingTop:'4rem'}}><div className="detail-section" style={{maxWidth:600,margin:'0 auto',textAlign:'center',padding:'3rem'}}>
+      <div style={{fontSize:'3rem',marginBottom:'1rem'}}>✅</div><h2>专家资料已提交</h2><p style={{color:'var(--text-secondary)',marginTop:12}}>平台审核后将展示您的信息。</p>
+    </div></div></div>
+  );
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>专家入驻</h1><p>加入平台，展示您的专业能力，获取咨询机会</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem', maxWidth: 700 }}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <div className="form-group"><label>姓名 <span className="required">*</span></label><input className="form-input" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} /></div>
+            <div className="form-group"><label>单位 <span className="required">*</span></label><input className="form-input" value={form.org} onChange={e=>setForm({...form,org:e.target.value})} /></div>
+          </div>
+          <div className="form-row">
+            <div className="form-group"><label>职位</label><input className="form-input" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} /></div>
+            <div className="form-group"><label>地区</label><input className="form-input" value={form.region} onChange={e=>setForm({...form,region:e.target.value})} /></div>
+          </div>
+          <div className="form-group"><label>专业方向</label><input className="form-input" placeholder="如：激光深熔焊、异种材料焊接" value={form.direction} onChange={e=>setForm({...form,direction:e.target.value})} /></div>
+          <div className="form-row">
+            <div className="form-group"><label>擅长材料</label><input className="form-input" placeholder="如：铝合金、不锈钢" value={form.materials} onChange={e=>setForm({...form,materials:e.target.value})} /></div>
+            <div className="form-group"><label>擅长行业</label><input className="form-input" placeholder="如：动力电池、汽车" value={form.industries} onChange={e=>setForm({...form,industries:e.target.value})} /></div>
+          </div>
+          <div className="form-group"><label>项目经验</label><textarea className="form-input" value={form.experience} onChange={e=>setForm({...form,experience:e.target.value})} placeholder="请简述您的项目经验…" /></div>
+          <div className="form-group"><label>联系方式</label><input className="form-input" placeholder="手机号或邮箱" value={form.contact} onChange={e=>setForm({...form,contact:e.target.value})} /></div>
+          <div className="form-group">
+            <label>上传头像</label>
+            <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius)', padding: '1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>点击上传头像 (演示模式)</div>
+          </div>
+          <button type="submit" className="btn btn-primary btn-lg" style={{width:'100%'}}>提交审核</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function SearchPage({ query }) {
+  const { navigate } = useRouter();
+  const q = decodeURIComponent(query || '');
+  const [tab, setTab] = useState('all');
+  const results = useMemo(() => {
+    const check = (s) => s && s.toLowerCase().includes(q.toLowerCase());
+    return {
+      experts: EXPERTS.filter(e => check(e.name) || check(e.direction) || e.materials.some(m => check(m)) || e.industries.some(i => check(i))),
+      articles: ARTICLES.filter(a => check(a.title) || a.tags.some(t => check(t)) || a.materials.some(m => check(m))),
+      materials: MATERIALS.filter(m => check(m.name) || check(m.category) || check(m.grades)),
+      defects: DEFECTS.filter(d => check(d.name) || d.materials.some(m => check(m))),
+      cases: CASES.filter(c => check(c.title) || check(c.material) || check(c.industry)),
+      equipment: EQUIPMENT_PARAMS.filter(e => check(e.material) || check(e.scene) || check(e.device)),
+      downloads: DOWNLOADS.filter(d => check(d.name) || check(d.type))
+    };
+  }, [q]);
+  const totalResults = Object.values(results).reduce((s, arr) => s + arr.length, 0);
+  const tabs = [
+    ['all', `全部(${totalResults})`], ['experts', `专家(${results.experts.length})`], ['articles', `文章(${results.articles.length})`],
+    ['materials', `材料(${results.materials.length})`], ['defects', `缺陷(${results.defects.length})`], ['cases', `案例(${results.cases.length})`],
+    ['equipment', `参数(${results.equipment.length})`], ['downloads', `资料(${results.downloads.length})`]
+  ];
+  const show = (type) => tab === 'all' || tab === type;
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>搜索结果</h1><p>关键词："{q}" — 共 {totalResults} 条结果</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem' }}>
+        <div className="tabs">{tabs.map(([k, l]) => <button key={k} className={`tab ${tab===k?'active':''}`} onClick={() => setTab(k)}>{l}</button>)}</div>
+        {totalResults === 0 ? (
+          <div className="empty-state">
+            <div className="icon">🔍</div>
+            <h3>未找到相关内容</h3>
+            <p>您可以提交技术咨询，由平台专家协助分析。</p>
+            <button className="btn btn-orange" style={{ marginTop: 16 }} onClick={() => navigate('/consultation')}>📝 提交技术咨询</button>
+          </div>
+        ) : (
+          <>
+            {show('experts') && results.experts.length > 0 && (
+              <div className="search-results-group">
+                <h3>👨‍🔬 专家 <span className="result-count">{results.experts.length}</span></h3>
+                {results.experts.map(e => (
+                  <div key={e.id} className="search-result-item" onClick={() => navigate('/experts/' + e.id)}>
+                    <h4>{e.name} — {e.title}</h4>
+                    <p>{e.org} · {e.direction} · {e.materials.join('、')}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('articles') && results.articles.length > 0 && (
+              <div className="search-results-group">
+                <h3>📄 工艺文章 <span className="result-count">{results.articles.length}</span></h3>
+                {results.articles.map(a => (
+                  <div key={a.id} className="search-result-item" onClick={() => navigate('/articles/' + a.id)}>
+                    <h4>{a.title}</h4>
+                    <p>{a.category} · {a.difficulty} · {a.materials.join('、')}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('materials') && results.materials.length > 0 && (
+              <div className="search-results-group">
+                <h3>🔩 材料数据 <span className="result-count">{results.materials.length}</span></h3>
+                {results.materials.map(m => (
+                  <div key={m.id} className="search-result-item" onClick={() => navigate('/materials/' + m.id)}>
+                    <h4>{m.name}</h4>
+                    <p>{m.category} · {m.grades} · 难度：{m.difficulty}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('defects') && results.defects.length > 0 && (
+              <div className="search-results-group">
+                <h3>⚠️ 缺陷分析 <span className="result-count">{results.defects.length}</span></h3>
+                {results.defects.map(d => (
+                  <div key={d.id} className="search-result-item" onClick={() => navigate('/defects/' + d.id)}>
+                    <h4>{d.name}</h4>
+                    <p>风险等级：{d.risk} · {d.materials.join('、')}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('cases') && results.cases.length > 0 && (
+              <div className="search-results-group">
+                <h3>🏭 行业案例 <span className="result-count">{results.cases.length}</span></h3>
+                {results.cases.map(c => (
+                  <div key={c.id} className="search-result-item" onClick={() => navigate('/cases/' + c.id)}>
+                    <h4>{c.title}</h4>
+                    <p>{c.industry} · {c.material} · {c.process}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('equipment') && results.equipment.length > 0 && (
+              <div className="search-results-group">
+                <h3>⚙️ 设备参数 <span className="result-count">{results.equipment.length}</span></h3>
+                {results.equipment.map(e => (
+                  <div key={e.id} className="search-result-item" onClick={() => navigate('/equipment/' + e.id)}>
+                    <h4>{e.material} · {e.thickness} · {e.method}</h4>
+                    <p>功率：{e.laserPower} · 速度：{e.speed} · {e.device}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {show('downloads') && results.downloads.length > 0 && (
+              <div className="search-results-group">
+                <h3>📥 资料下载 <span className="result-count">{results.downloads.length}</span></h3>
+                {results.downloads.map(d => (
+                  <div key={d.id} className="search-result-item" onClick={() => navigate('/downloads')}>
+                    <h4>{d.name}</h4>
+                    <p>{d.type} · {d.size}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AboutPage() {
+  return (
+    <div className="page">
+      <div className="page-header"><div className="container"><h1>关于我们</h1><p>激光焊接专家数据库平台介绍</p></div></div>
+      <div className="container" style={{ paddingBottom: '3rem', maxWidth: 800 }}>
+        <div className="detail-section">
+          <h3>🏭 平台简介</h3>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+            激光焊接专家数据库（Laser Welding Expert Database）是连接激光焊接领域专家、工艺知识、材料数据、设备参数与行业案例的一站式专业技术平台。
+            平台致力于为制造企业提供专家匹配、工艺参考、缺陷分析、案例查询和技术资料支持，帮助用户快速找到焊接难题的解决方案。
+          </p>
+        </div>
+        <div className="detail-section">
+          <h3>🎯 核心价值</h3>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+            服务面向制造企业、激光焊接工程师、工艺工程师、设备厂家、科研院所、新能源企业、汽车零部件企业、航空航天制造企业等。
+            覆盖专家匹配、工艺参考、缺陷分析、材料查询、设备选型和行业案例等核心功能模块。
+          </p>
+        </div>
+        <div className="detail-section">
+          <h3>📞 联系我们</h3>
+          <div className="detail-grid">
+            <div className="detail-field"><label>服务热线</label><span>400-XXX-XXXX</span></div>
+            <div className="detail-field"><label>邮箱</label><span>service@laser-welding-db.com</span></div>
+            <div className="detail-field"><label>开发者</label><span>威维</span></div>
+            <div className="detail-field"><label>开发者邮箱</label><span>ljw1335647838@outlook.com</span></div>
+          </div>
+        </div>
+        <SafetyBanner />
+      </div>
+    </div>
+  );
+}
+
+// ========== ADMIN ==========
+function AdminLoginPage() {
+  const { navigate } = useRouter();
+  const toast = useToast();
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const handleLogin = () => {
+    if (user === 'admin' && pass === 'admin123') {
+      localStorage.setItem('admin_logged', 'true');
+      toast('登录成功！', 'success');
+      navigate('/admin/dashboard');
+    } else {
+      toast('用户名或密码错误', 'error');
+    }
+  };
+  return (
+    <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '3rem', width: '100%', maxWidth: 400 }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div className="logo-icon" style={{ width: 60, height: 60, fontSize: 24, margin: '0 auto 1rem', borderRadius: 16 }}>LW</div>
+          <h2 style={{ marginBottom: 4 }}>后台管理系统</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>请输入管理员账号登录</p>
+        </div>
+        <div className="form-group"><label>用户名</label><input className="form-input" value={user} onChange={e => setUser(e.target.value)} placeholder="admin" /></div>
+        <div className="form-group"><label>密码</label><input className="form-input" type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="admin123" onKeyDown={e => e.key === 'Enter' && handleLogin()} /></div>
+        <button className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 8 }} onClick={handleLogin}>登录</button>
+        <p style={{ textAlign: 'center', marginTop: 16, fontSize: '0.8rem', color: 'var(--text-muted)' }}>测试账号：admin / admin123</p>
+      </div>
+    </div>
+  );
+}
+
+function AdminDashboard({ section }) {
+  const { navigate, path } = useRouter();
+  const toast = useToast();
+  const [adminData, setAdminData] = useLocalStorage('admin_data', {
+    experts: EXPERTS.map(e => ({ id: e.id, name: e.name, org: e.org, direction: e.direction, region: e.region })),
+    articles: ARTICLES.map(a => ({ id: a.id, title: a.title, category: a.category, difficulty: a.difficulty, views: a.views })),
+    materials: MATERIALS.map(m => ({ id: m.id, name: m.name, category: m.category, difficulty: m.difficulty })),
+    defects: DEFECTS.map(d => ({ id: d.id, name: d.name, risk: d.risk })),
+    cases: CASES.map(c => ({ id: c.id, title: c.title, industry: c.industry, material: c.material })),
+    equipment: EQUIPMENT_PARAMS.map(e => ({ id: e.id, material: e.material, thickness: e.thickness, method: e.method })),
+    downloads: DOWNLOADS.map(d => ({ id: d.id, name: d.name, type: d.type, level: d.level })),
+    messages: [...MESSAGES_INIT]
+  });
+  const [search, setSearch] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  useEffect(() => {
+    if (!localStorage.getItem('admin_logged')) { navigate('/admin/login'); }
+  }, []);
+
+  const menus = [
+    ['dashboard', '📊 仪表盘'], ['experts', '👨‍🔬 专家管理'], ['articles', '📄 文章管理'],
+    ['materials', '🔩 材料管理'], ['equipment', '⚙️ 参数管理'], ['defects', '⚠️ 缺陷管理'],
+    ['cases', '🏭 案例管理'], ['downloads', '📥 资料管理'], ['messages', '💬 咨询留言'], ['members', '👥 会员管理'], ['settings', '⚙️ 系统设置']
+  ];
+  const currentSection = section || 'dashboard';
+
+  const stats = [
+    { label: '专家数量', value: EXPERTS.length, icon: '👨‍🔬' },
+    { label: '文章数量', value: ARTICLES.length, icon: '📄' },
+    { label: '材料数量', value: MATERIALS.length, icon: '🔩' },
+    { label: '案例数量', value: CASES.length, icon: '🏭' },
+    { label: '参数记录', value: EQUIPMENT_PARAMS.length, icon: '⚙️' },
+    { label: '缺陷条目', value: DEFECTS.length, icon: '⚠️' },
+    { label: '资料数量', value: DOWNLOADS.length, icon: '📥' },
+    { label: '咨询留言', value: MESSAGES_INIT.length, icon: '💬' }
+  ];
+
+  const fieldConfigs = {
+    experts: { title: '专家管理', fields: ['name', 'org', 'direction', 'region'], labels: ['姓名', '单位', '专业方向', '地区'] },
+    articles: { title: '文章管理', fields: ['title', 'category', 'difficulty', 'views'], labels: ['标题', '分类', '难度', '阅读量'] },
+    materials: { title: '材料管理', fields: ['name', 'category', 'difficulty'], labels: ['名称', '类别', '难度'] },
+    equipment: { title: '参数管理', fields: ['material', 'thickness', 'method'], labels: ['材料', '厚度', '焊接方式'] },
+    defects: { title: '缺陷管理', fields: ['name', 'risk'], labels: ['名称', '风险等级'] },
+    cases: { title: '案例管理', fields: ['title', 'industry', 'material'], labels: ['标题', '行业', '材料'] },
+    downloads: { title: '资料管理', fields: ['name', 'type', 'level'], labels: ['名称', '类型', '等级'] },
+    messages: { title: '咨询留言', fields: ['name', 'company', 'problem', 'status', 'date'], labels: ['姓名', '公司', '问题', '状态', '日期'] },
+    members: { title: '会员管理', fields: ['name', 'level', 'date'], labels: ['用户名', '等级', '开通日期'] }
+  };
+
+  const currentDataKey = currentSection === 'dashboard' || currentSection === 'settings' ? null : currentSection;
+  const config = currentDataKey ? fieldConfigs[currentDataKey] : null;
+  const currentData = currentDataKey ? (adminData[currentDataKey] || []) : [];
+
+  const filteredData = useMemo(() => {
+    if (!search || !currentDataKey) return currentData;
+    return currentData.filter(item => Object.values(item).some(v => String(v).toLowerCase().includes(search.toLowerCase())));
+  }, [currentData, search, currentDataKey]);
+
+  const handleAdd = () => { setEditItem({}); setShowModal(true); };
+  const handleEdit = (item) => { setEditItem({ ...item }); setShowModal(true); };
+  const handleSave = () => {
+    if (!editItem) return;
+    setAdminData(prev => {
+      const arr = [...(prev[currentDataKey] || [])];
+      if (editItem.id) {
+        const idx = arr.findIndex(x => x.id === editItem.id);
+        if (idx >= 0) arr[idx] = editItem;
+      } else {
+        editItem.id = Date.now();
+        arr.push(editItem);
+      }
+      return { ...prev, [currentDataKey]: arr };
+    });
+    setShowModal(false);
+    setEditItem(null);
+    toast('操作成功！', 'success');
+  };
+  const handleDelete = (id) => {
+    setAdminData(prev => ({
+      ...prev,
+      [currentDataKey]: prev[currentDataKey].filter(x => x.id !== id)
+    }));
+    setDeleteConfirm(null);
+    toast('删除成功！', 'success');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_logged');
+    toast('已退出登录', 'info');
+    navigate('/admin/login');
+  };
+
+  return (
+    <div className="page">
+      <div className="admin-layout">
+        <div className="admin-sidebar">
+          {menus.map(([k, l]) => (
+            <a key={k} className={currentSection === k ? 'active' : ''} onClick={() => navigate('/admin/' + k)}>{l}</a>
+          ))}
+          <a onClick={handleLogout} style={{ marginTop: 'auto', color: 'var(--accent-red)' }}>🚪 退出登录</a>
+        </div>
+        <div className="admin-content">
+          {currentSection === 'dashboard' ? (
+            <>
+              <div className="admin-header"><h1>仪表盘</h1></div>
+              <div className="admin-stats">
+                {stats.map(s => (
+                  <div key={s.label} className="admin-stat">
+                    <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>{s.icon}</div>
+                    <div className="number">{s.value}</div>
+                    <div className="label">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="detail-section">
+                <h3>📊 平台概览</h3>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                  欢迎使用激光焊接专家数据库后台管理系统。平台已收录 {EXPERTS.length} 位专家、{ARTICLES.length} 篇工艺文章、
+                  {MATERIALS.length} 种材料数据、{CASES.length} 个行业案例、{EQUIPMENT_PARAMS.length} 条设备参数和 {DEFECTS.length} 种缺陷分析。
+                </p>
+              </div>
+            </>
+          ) : currentSection === 'settings' ? (
+            <>
+              <div className="admin-header"><h1>系统设置</h1></div>
+              <div className="detail-section">
+                <h3>⚙️ 基本设置</h3>
+                <div className="form-group"><label>平台名称</label><input className="form-input" defaultValue="激光焊接专家数据库" /></div>
+                <div className="form-group"><label>服务热线</label><input className="form-input" defaultValue="400-XXX-XXXX" /></div>
+                <div className="form-group"><label>邮箱</label><input className="form-input" defaultValue="service@laser-welding-db.com" /></div>
+                <button className="btn btn-primary" onClick={() => toast('设置已保存', 'success')}>保存设置</button>
+              </div>
+            </>
+          ) : config ? (
+            <>
+              <div className="admin-header"><h1>{config.title}</h1><button className="btn btn-primary" onClick={handleAdd}>+ 新增</button></div>
+              <div className="admin-toolbar">
+                <input placeholder="搜索…" value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      {config.labels.map(l => <th key={l}>{l}</th>)}
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map(item => (
+                      <tr key={item.id}>
+                        <td>{item.id}</td>
+                        {config.fields.map(f => <td key={f}>{String(item[f] || '-')}</td>)}
+                        <td>
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <button className="btn btn-sm btn-primary" onClick={() => handleEdit(item)}>编辑</button>
+                            <button className="btn btn-sm btn-danger" onClick={() => setDeleteConfirm(item.id)}>删除</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {filteredData.length === 0 && <div className="empty-state" style={{ padding: '2rem' }}><p>暂无数据</p></div>}
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      {showModal && editItem && config && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h2>{editItem.id ? '编辑' : '新增'}{config.title.replace('管理', '')}</h2>
+            {config.fields.map((f, i) => (
+              <div className="form-group" key={f}>
+                <label>{config.labels[i]}</label>
+                <input className="form-input" value={editItem[f] || ''} onChange={e => setEditItem({...editItem, [f]: e.target.value})} />
+              </div>
+            ))}
+            <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+              <button className="btn btn-primary" onClick={handleSave}>保存</button>
+              <button className="btn btn-secondary" onClick={() => setShowModal(false)}>取消</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteConfirm && (
+        <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+            <h2>确认删除</h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>确定要删除此条目吗？此操作不可恢复。</p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button className="btn btn-danger" onClick={() => handleDelete(deleteConfirm)}>确认删除</button>
+              <button className="btn btn-secondary" onClick={() => setDeleteConfirm(null)}>取消</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ========== FLOATING BUTTON ==========
+function FloatingConsult() {
+  const { navigate, path } = useRouter();
+  if (path.startsWith('/admin') || path === '/consultation') return null;
+  return (
+    <button className="fab-consult" onClick={() => navigate('/consultation')} title="技术咨询">
+      💬
+    </button>
+  );
+}
+
+// ========== APP ==========
+function App() {
+  const { path } = useRouter();
+  const isAdmin = path.startsWith('/admin') && path !== '/admin/login';
+
+  const renderPage = () => {
+    if (path === '/' || path === '') return <HomePage />;
+    if (path === '/experts') return <ExpertListPage />;
+    if (path.startsWith('/experts/')) return <ExpertDetailPage id={path.split('/')[2]} />;
+    if (path === '/articles') return <ArticlesPage />;
+    if (path.startsWith('/articles/')) return <ArticleDetailPage id={path.split('/')[2]} />;
+    if (path === '/materials') return <MaterialsPage />;
+    if (path.startsWith('/materials/')) return <MaterialDetailPage id={path.split('/')[2]} />;
+    if (path === '/equipment') return <EquipmentPage />;
+    if (path.startsWith('/equipment/')) return <EquipmentDetailPage id={path.split('/')[2]} />;
+    if (path === '/defects') return <DefectsPage />;
+    if (path.startsWith('/defects/')) return <DefectDetailPage id={path.split('/')[2]} />;
+    if (path === '/cases') return <CasesPage />;
+    if (path.startsWith('/cases/')) return <CaseDetailPage id={path.split('/')[2]} />;
+    if (path === '/downloads') return <DownloadsPage />;
+    if (path === '/membership') return <MembershipPage />;
+    if (path === '/consultation') return <ConsultationPage />;
+    if (path === '/expert-apply') return <ExpertApplyPage />;
+    if (path === '/about') return <AboutPage />;
+    if (path === '/admin/login') return <AdminLoginPage />;
+    if (path.startsWith('/admin/')) return <AdminDashboard section={path.split('/')[2]} />;
+    if (path.startsWith('/search')) {
+      const params = new URLSearchParams(window.location.hash.split('?')[1]);
+      return <SearchPage query={params.get('q')} />;
+    }
+    return <HomePage />;
+  };
+
+  return (
+    <>
+      <Header />
+      {renderPage()}
+      {!isAdmin && <FloatingConsult />}
+      {!isAdmin && <Footer />}
+    </>
+  );
+}
+
+function Root() {
+  return (
+    <Router>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </Router>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+</script>
+</body>
+</html>
